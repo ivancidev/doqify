@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Builds & caches
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# Secrets & env (never index in Cursor)
+.env
+.env.*
+
+# Test & tooling output
+coverage/
+.vercel/
+
+# Logs & OS noise
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.DS_Store
+*.pem
