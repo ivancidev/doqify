@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { queryDocuments } from "@/lib/n8n";
 import type { Message } from "../types";
+import { useAuth } from "@/components/providers/AuthContext";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { session } = useAuth();
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || isLoading) return;
@@ -21,7 +23,7 @@ export function useChat() {
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    const result = await queryDocuments(content);
+    const result = await queryDocuments(content, session?.access_token);
 
     const assistantMessage: Message = {
       id: crypto.randomUUID(),

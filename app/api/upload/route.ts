@@ -15,6 +15,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Authenticate user via Authorization Bearer token
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { success: false, error: "Authentication required." },
+        { status: 401 }
+      );
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: "Invalid or expired session. Please log in again." },
+        { status: 401 }
+      );
+    }
+    const userId = user.id;
+
     let text = "";
     let name = "";
 
@@ -80,12 +98,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Overwrite behavior: Delete existing document chunks with the same name
+    // Overwrite behavior: Delete existing document chunks with the same name and user_id
     // to avoid duplicate search results.
     const { error: deleteError } = await supabase
       .from("documents")
       .delete()
-      .eq("name", name);
+      .eq("name", name)
+      .eq("user_id", userId);
 
     if (deleteError) {
       console.warn("Could not delete old chunks (non-blocking):", deleteError.message, deleteError.details);
@@ -96,6 +115,7 @@ export async function POST(request: NextRequest) {
       name,
       content: chunk,
       embedding: embeddings[index],
+      user_id: userId,
     }));
 
     const { error: insertError } = await supabase

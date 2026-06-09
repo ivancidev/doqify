@@ -1,13 +1,33 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/providers/AuthContext";
 import { useUpload } from "@/features/upload/hooks/useUpload";
 import { UploadTabs } from "@/features/upload/components/UploadTabs";
 import { DocumentList } from "@/features/upload/components/DocumentList";
 import { AlertCircle } from "lucide-react";
+import { Spinner } from "@heroui/react";
 
 export default function UploadPage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const { documents, isUploading, error, handleFileUpload, handleTextUpload, removeDocument } =
     useUpload();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/auth");
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return (
+      <div className="flex flex-1 items-center justify-center bg-[#09090b]">
+        <Spinner size="lg" color="accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative mx-auto w-full max-w-2xl px-4 py-12 sm:px-6">

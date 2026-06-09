@@ -14,6 +14,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Authenticate user via Authorization Bearer token
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
+      );
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Invalid or expired session. Please log in again." },
+        { status: 401 }
+      );
+    }
+    const userId = user.id;
+
     const { question } = await request.json();
 
     if (!question || !question.trim()) {
@@ -48,6 +66,7 @@ export async function POST(request: NextRequest) {
         query_embedding: queryEmbedding,
         match_threshold: 0.2, // cosine similarity threshold
         match_count: 5,        // retrieve top 5 matching blocks
+        p_user_id: userId,
       }
     );
 

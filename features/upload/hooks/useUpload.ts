@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { uploadDocument, uploadText } from "@/lib/n8n";
 import type { UploadedDocument } from "../types";
+import { useAuth } from "@/components/providers/AuthContext";
 
 export function useUpload() {
   const [documents, setDocuments] = useState<UploadedDocument[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { session } = useAuth();
 
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
@@ -23,7 +25,7 @@ export function useUpload() {
 
     setDocuments((prev) => [...prev, tempDoc]);
 
-    const result = await uploadDocument(file);
+    const result = await uploadDocument(file, session?.access_token);
 
     setDocuments((prev) =>
       prev.map((doc) =>
@@ -52,7 +54,7 @@ export function useUpload() {
 
     setDocuments((prev) => [...prev, tempDoc]);
 
-    const result = await uploadText(text, name);
+    const result = await uploadText(text, name, session?.access_token);
 
     setDocuments((prev) =>
       prev.map((doc) =>
