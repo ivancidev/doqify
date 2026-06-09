@@ -12,37 +12,45 @@ interface UploadTabsProps {
 
 export function UploadTabs({ onFileUpload, onTextUpload, isUploading }: UploadTabsProps) {
   return (
-    <Tabs defaultSelectedKey="pdf" className="w-full">
+    <Tabs defaultSelectedKey="pdf" variant="secondary" className="w-full">
       <Tabs.ListContainer>
         <Tabs.List
           aria-label="Método de carga"
-          className="*:data-[selected=true]:text-violet-400 *:text-[#a1a1aa] *:text-sm *:font-medium"
+          className="border-b border-zinc-800/60 pb-px flex gap-6 text-sm font-semibold"
         >
-          <Tabs.Tab id="pdf">
+          <Tabs.Tab 
+            id="pdf"
+            className="pb-3 text-zinc-400 data-[selected=true]:text-zinc-100 cursor-pointer outline-none transition-colors"
+          >
             Subir PDF
             <Tabs.Indicator />
           </Tabs.Tab>
-          <Tabs.Separator />
-          <Tabs.Tab id="text">
+          <Tabs.Tab 
+            id="text"
+            className="pb-3 text-zinc-400 data-[selected=true]:text-zinc-100 cursor-pointer outline-none transition-colors"
+          >
             Pegar texto
             <Tabs.Indicator />
           </Tabs.Tab>
         </Tabs.List>
       </Tabs.ListContainer>
 
-      <Tabs.Panel id="pdf" className="pt-5">
+      <Tabs.Panel id="pdf" className="pt-6">
         <div className="flex flex-col gap-4">
           <DropZone onFileAccepted={onFileUpload} isUploading={isUploading} />
           {isUploading && (
-            <div className="flex items-center gap-2 rounded-lg border border-violet-500/20 bg-violet-600/10 px-4 py-3">
-              <Spinner size="sm" color="current" className="text-violet-400" />
-              <span className="text-sm text-violet-400">Procesando tu documento…</span>
+            <div className="flex items-center gap-3.5 rounded-2xl border border-violet-500/20 bg-violet-600/5 px-5 py-4 shadow-[0_0_30px_rgba(124,58,237,0.06)] animate-pulse">
+              <Spinner size="sm" color="accent" />
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-violet-200">Procesando tu documento…</span>
+                <span className="text-xs text-violet-400/85">Extrayendo texto y generando embeddings vectoriales con Cohere</span>
+              </div>
             </div>
           )}
         </div>
       </Tabs.Panel>
 
-      <Tabs.Panel id="text" className="pt-5">
+      <Tabs.Panel id="text" className="pt-6">
         <TextInput onSubmit={onTextUpload} isUploading={isUploading} />
       </Tabs.Panel>
     </Tabs>

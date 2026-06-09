@@ -1,8 +1,8 @@
 // src/lib/n8n.ts
 // All communication with n8n webhooks
 
-const UPLOAD_URL = process.env.NEXT_PUBLIC_N8N_UPLOAD_URL!;
-const QUERY_URL = process.env.NEXT_PUBLIC_N8N_QUERY_URL!;
+const UPLOAD_URL = "/api/upload";
+const QUERY_URL = "/api/chat";
 
 export interface UploadResponse {
   success: boolean;
