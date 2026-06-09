@@ -1,141 +1,444 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Upload, MessageSquare, Zap, Search, FileCheck, User } from "lucide-react";
+import {
+  ArrowRight,
+  Upload,
+  MessageSquare,
+  Zap,
+  Search,
+  FileCheck,
+  User,
+  ChevronDown,
+  Brain,
+  Cpu,
+} from "lucide-react";
 import { useAuth } from "@/components/providers/AuthContext";
 import { Spinner } from "@heroui/react";
+import { motion, type Variants } from "motion/react";
+import { SiSupabase, SiSupabaseHex } from "@icons-pack/react-simple-icons";
+
+/* ─── Variants ─── */
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+const stagger: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12 } },
+};
+
+
+/* ─── Data ─── */
+const techStack = [
+  {
+    name: "Supabase",
+    color: `#${SiSupabaseHex}`,
+    icon: SiSupabase,
+    label: "Base de datos vectorial",
+  },
+  {
+    name: "Cohere",
+    color: "#a78bfa",
+    icon: Brain,
+    label: "Embeddings semánticos",
+  },
+  {
+    name: "Groq",
+    color: "#F55036",
+    icon: Cpu,
+    label: "Inferencia ultrarrápida",
+  },
+];
+
+const stats = [
+  { value: "< 3s", label: "Procesamiento" },
+  { value: "PDF + Texto", label: "Formatos" },
+  { value: "100% Privado", label: "Tus datos" },
+];
+
+const steps = [
+  { num: "01", title: "Sube", desc: "Tu PDF o texto" },
+  { num: "02", title: "Pregunta", desc: "En lenguaje natural" },
+  { num: "03", title: "Obtén", desc: "Respuesta precisa" },
+];
 
 const features = [
   {
     icon: Upload,
     title: "Sube cualquier documento",
-    description: "Arrastra y suelta PDFs o pega texto directamente. Se procesa y fragmenta de forma automática.",
+    description:
+      "Arrastra y suelta PDFs o pega texto directamente. Se procesa y fragmenta de forma automática.",
   },
   {
     icon: MessageSquare,
     title: "Chatea con tus documentos",
-    description: "Haz preguntas en lenguaje natural y obtén respuestas precisas basadas en tu contenido en tiempo real.",
+    description:
+      "Haz preguntas en lenguaje natural y obtén respuestas precisas basadas en tu contenido en tiempo real.",
   },
   {
     icon: Search,
     title: "Búsqueda inteligente",
-    description: "El motor vectorial analiza el contenido completo y encuentra el contexto exacto al instante.",
+    description:
+      "El motor vectorial analiza el contenido completo y encuentra el contexto exacto al instante.",
   },
   {
     icon: FileCheck,
     title: "Respuestas en contexto",
-    description: "Respuestas directas generadas exclusivamente a partir de las fuentes que tú mismo cargues.",
+    description:
+      "Respuestas directas generadas exclusivamente a partir de las fuentes que tú mismo cargues.",
   },
 ];
 
+/* ─── Dot grid ─── */
+function DotGrid() {
+  return (
+    <svg
+      className="absolute inset-0 h-full w-full opacity-[0.07] pointer-events-none select-none"
+      aria-hidden="true"
+    >
+      <defs>
+        <pattern
+          id="hero-dots"
+          x="0"
+          y="0"
+          width="28"
+          height="28"
+          patternUnits="userSpaceOnUse"
+        >
+          <circle cx="2" cy="2" r="2.5" fill="#7c3aed" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#hero-dots)" />
+    </svg>
+  );
+}
+
+/* ─── Page ─── */
 export default function HomePage() {
   const { user, loading } = useAuth();
+
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden">
-      {/* Premium background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-600/10 via-indigo-950/5 to-transparent blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[350px] h-[350px] bg-fuchsia-600/5 rounded-full blur-[90px] pointer-events-none -z-10" />
+      {/* Orbs */}
+      <div
+        className="animate-float-orb-1 absolute -top-32 left-1/2 -translate-x-[55%] w-[700px] h-[700px] rounded-full pointer-events-none -z-10"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 70%)",
+        }}
+      />
+      <div
+        className="animate-float-orb-2 absolute top-[25%] right-[-120px] w-[500px] h-[500px] rounded-full pointer-events-none -z-10"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%)",
+          filter: "blur(20px)",
+        }}
+      />
 
-      {/* Hero Section */}
-      <section className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 text-center md:py-36">
-        {/* Decorative Badge */}
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-500/25 bg-violet-600/10 px-3.5 py-1 text-xs font-semibold tracking-wide text-violet-400 shadow-sm shadow-violet-500/5 animate-fade-in">
-          <Zap className="h-3 w-3" />
-          Asistente inteligente de documentos RAG
-        </span>
+      {/* ═══════════════════════════════
+          HERO
+      ═══════════════════════════════ */}
+      <section className="relative flex flex-1 flex-col items-center justify-center gap-0 px-6 pt-28 pb-20 text-center md:pt-40 md:pb-28 overflow-hidden">
+        <DotGrid />
 
-        {/* Headline */}
-        <div className="flex flex-col gap-6 max-w-4xl">
-          <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-zinc-50 sm:text-6xl">
-            Tu asistente que entiende{" "}
-            <span className="text-violet-500">
-              cada palabra de tus documentos
+        <motion.div
+          className="flex flex-col items-center gap-8 w-full"
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+        >
+          {/* Badge */}
+          <motion.div variants={fadeUp}>
+            <span className="inline-flex items-center gap-2 rounded-full border border-violet-500/25 bg-violet-600/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-violet-400 shadow-sm shadow-violet-500/5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              <Zap className="h-3 w-3" />
+              Asistente inteligente de documentos RAG
             </span>
-          </h1>
-          <p className="mx-auto max-w-xl text-base text-zinc-400 sm:text-lg">
-            Sube cualquier PDF o texto y obtén respuestas precisas al instante, sin tener que leer página por página. Impulsado por Supabase, Cohere y Groq.
-          </p>
-        </div>
+          </motion.div>
 
-        {/* CTAs */}
-        <div className="flex flex-wrap justify-center gap-4 min-h-[52px] items-center">
-          {loading ? (
-            <Spinner size="sm" color="accent" />
-          ) : user ? (
-            <>
-              <Link
-                href="/upload"
-                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-violet-500/10 transition-all duration-200 hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] cursor-pointer"
+          {/* Headline */}
+          <motion.div variants={fadeUp} className="max-w-4xl space-y-6">
+            <h1 className="text-5xl font-extrabold leading-[1.12] tracking-tight sm:text-7xl">
+              <span
+                style={{
+                  background: "linear-gradient(135deg, #fafafa 0%, #d4d4d8 55%, #a1a1aa 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
               >
-                <Upload className="h-4 w-4" />
-                Subir documento
-              </Link>
-              <Link
-                href="/chat"
-                className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-[#0d0d11]/80 px-7 py-3.5 text-sm font-semibold text-zinc-200 shadow-sm transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900 active:scale-[0.98] cursor-pointer"
+                Tu asistente que entiende
+              </span>{" "}
+              <span className="shimmer-text">
+                cada palabra de tus documentos
+              </span>
+            </h1>
+            <p className="mx-auto max-w-2xl text-lg text-zinc-400 sm:text-xl leading-relaxed">
+              Sube cualquier PDF o texto y obtén respuestas precisas al instante,
+              sin tener que leer página por página.
+            </p>
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-4 pt-2"
+          >
+            {loading ? (
+              <Spinner size="sm" color="accent" />
+            ) : user ? (
+              <>
+                <Link
+                  href="/upload"
+                  className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                >
+                  <Upload className="h-5 w-5" />
+                  Subir documento
+                </Link>
+                <Link
+                  href="/chat"
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-8 py-4 text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98]"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                  Ir al chat
+                  <ArrowRight className="h-5 w-5 text-zinc-400" />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth"
+                  className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                >
+                  <Zap className="h-5 w-5" />
+                  Comenzar gratis
+                  <ArrowRight className="h-5 w-5 text-violet-200" />
+                </Link>
+                <Link
+                  href="/auth"
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-8 py-4 text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98]"
+                >
+                  <User className="h-5 w-5" />
+                  Iniciar sesión
+                </Link>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+        >
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-600">
+            Ver más
+          </span>
+          <ChevronDown className="animate-bounce-soft h-5 w-5 text-zinc-600" />
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════
+          POWERED BY
+      ═══════════════════════════════ */}
+      <section className="border-t border-zinc-900 px-6 py-20 md:py-28">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-14 text-center"
+          >
+            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-600">
+              Powered by
+            </span>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="grid grid-cols-1 gap-5 sm:grid-cols-3"
+          >
+            {techStack.map(({ name, color, icon: Icon, label }, i) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group flex flex-col items-center gap-5 rounded-2xl border border-zinc-800/70 bg-zinc-900/20 px-8 py-10 backdrop-blur-sm transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900/40 hover:-translate-y-1"
               >
-                <MessageSquare className="h-4 w-4" />
-                Ir al chat
-                <ArrowRight className="h-4 w-4 text-zinc-500" />
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/auth"
-                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-violet-500/10 transition-all duration-200 hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] cursor-pointer"
-              >
-                <Zap className="h-4 w-4" />
-                Comenzar gratis
-                <ArrowRight className="h-4 w-4 text-violet-200" />
-              </Link>
-              <Link
-                href="/auth"
-                className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-[#0d0d11]/80 px-7 py-3.5 text-sm font-semibold text-zinc-200 shadow-sm transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900 active:scale-[0.98] cursor-pointer"
-              >
-                <User className="h-4 w-4" />
-                Iniciar sesión
-              </Link>
-            </>
-          )}
+                <div
+                  className="flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 transition-all duration-300 group-hover:scale-110"
+                  style={{ boxShadow: `0 0 30px ${color}18` }}
+                >
+                  <Icon className="h-8 w-8" style={{ color }} />
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-bold text-zinc-100">{name}</p>
+                  <p className="mt-1 text-sm text-zinc-500">{label}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="relative border-t border-zinc-900 bg-[#0d0d11]/40 px-4 py-20 backdrop-blur-xs">
+      {/* ═══════════════════════════════
+          STATS
+      ═══════════════════════════════ */}
+      <section className="border-t border-zinc-900 px-6 py-20 md:py-28 bg-[#0a0a0e]/60">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-14 text-center">
-            <span className="text-xs font-bold text-violet-400 uppercase tracking-widest">Características</span>
-            <h2 className="mt-2 text-2xl font-bold text-zinc-100 sm:text-3xl">
-              Todo lo que necesitas
-            </h2>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {features.map(({ icon: Icon, title, description }) => (
-              <div
-                key={title}
-                className="flex gap-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/10 p-6 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/20 hover:-translate-y-0.5 shadow-sm group hover:shadow-[0_10px_30px_rgba(124,58,237,0.02)]"
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {stats.map(({ value, label }, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                className="flex flex-col items-center gap-3 rounded-2xl border border-zinc-800/60 bg-zinc-900/10 px-8 py-10 text-center backdrop-blur-sm"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-600/10 border border-violet-500/10 group-hover:bg-violet-600/20 group-hover:border-violet-500/25 group-hover:scale-105 transition-all duration-300">
-                  <Icon className="h-5.5 w-5.5 text-violet-400" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-zinc-200 group-hover:text-zinc-100 transition-colors">{title}</h3>
-                  <p className="mt-1.5 text-sm text-zinc-400 leading-relaxed">{description}</p>
-                </div>
+                <span className="text-4xl font-extrabold tracking-tight text-violet-400 sm:text-5xl">
+                  {value}
+                </span>
+                <span className="text-sm font-medium text-zinc-500 uppercase tracking-widest">
+                  {label}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════
+          CÓMO FUNCIONA
+      ═══════════════════════════════ */}
+      <section className="border-t border-zinc-900 px-6 py-20 md:py-28">
+        <div className="mx-auto max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-16 text-center"
+          >
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-violet-500">
+              Cómo funciona
+            </span>
+            <h2 className="mt-3 text-3xl font-bold text-zinc-100 sm:text-4xl">
+              Tres pasos, cero fricción
+            </h2>
+          </motion.div>
+
+          <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-start sm:gap-0">
+            {steps.map(({ num, title, desc }, i) => (
+              <div key={num} className="flex flex-1 flex-col items-center sm:flex-row">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.88 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: i * 0.15 }}
+                  className="flex flex-1 flex-col items-center gap-4 rounded-2xl border border-zinc-800/70 bg-zinc-900/20 px-8 py-10 text-center backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/30 hover:-translate-y-1"
+                >
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-500/30 bg-violet-600/10 text-xl font-black text-violet-400">
+                    {num}
+                  </span>
+                  <div>
+                    <p className="text-xl font-bold text-zinc-100">{title}</p>
+                    <p className="mt-1.5 text-sm text-zinc-500">{desc}</p>
+                  </div>
+                </motion.div>
+
+                {/* Desktop arrow */}
+                {i < steps.length - 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    whileInView={{ opacity: 1, scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.15 + 0.3 }}
+                    style={{ transformOrigin: "left" }}
+                    className="hidden sm:flex items-center justify-center w-12 shrink-0 mt-0"
+                  >
+                    <ArrowRight className="h-5 w-5 text-zinc-700" />
+                  </motion.div>
+                )}
+                {/* Mobile divider */}
+                {i < steps.length - 1 && (
+                  <div className="sm:hidden flex flex-col items-center py-2">
+                    <div className="w-px h-6 bg-zinc-800" />
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-900 bg-[#09090b] px-4 py-8">
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <span className="text-xs text-zinc-500 font-medium">
+      {/* ═══════════════════════════════
+          FEATURES
+      ═══════════════════════════════ */}
+      <section className="border-t border-zinc-900 bg-[#0a0a0e]/60 px-6 py-20 md:py-28">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-16 text-center"
+          >
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-violet-500">
+              Características
+            </span>
+            <h2 className="mt-3 text-3xl font-bold text-zinc-100 sm:text-4xl">
+              Todo lo que necesitas
+            </h2>
+          </motion.div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {features.map(({ icon: Icon, title, description }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group flex gap-6 rounded-2xl border border-zinc-800/70 bg-zinc-900/10 p-8 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/20 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(124,58,237,0.05)]"
+              >
+                <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-violet-600/10 border border-violet-500/10 group-hover:bg-violet-600/20 group-hover:border-violet-500/25 group-hover:scale-110 transition-all duration-300">
+                  <Icon className="h-6 w-6 text-violet-400" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-zinc-100">{title}</h3>
+                  <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
+                    {description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════
+          FOOTER
+      ═══════════════════════════════ */}
+      <footer className="border-t border-zinc-900 bg-[#09090b] px-6 py-10">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
+          <span className="text-xs text-zinc-600 font-medium">
             © {new Date().getFullYear()} doqify · Todos los derechos reservados
           </span>
-          <span className="text-xs text-zinc-500 font-medium">
+          <span className="text-xs text-zinc-600 font-medium">
             Consulta tus documentos de forma segura e inteligente
           </span>
         </div>

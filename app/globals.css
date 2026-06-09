@@ -34,3 +34,76 @@ body {
   color: #fafafa;
   min-height: 100%;
 }
+
+/* ─── Hero animations ─── */
+
+/* Shimmer on violet title span */
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #5b21b6 0%,
+    #7c3aed 20%,
+    #8b5cf6 38%,
+    #c084fc 50%,
+    #8b5cf6 62%,
+    #7c3aed 80%,
+    #5b21b6 100%
+  );
+  background-size: 1200px 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Badge live dot ping */
+@keyframes ping-slow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0; }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 1.8s ease-in-out infinite;
+}
+
+/* Floating orbs */
+@keyframes float-orb-1 {
+  0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+  33% { transform: translateY(-30px) translateX(20px) scale(1.05); }
+  66% { transform: translateY(15px) translateX(-15px) scale(0.97); }
+}
+
+@keyframes float-orb-2 {
+  0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+  33% { transform: translateY(20px) translateX(-25px) scale(0.95); }
+  66% { transform: translateY(-20px) translateX(20px) scale(1.08); }
+}
+
+.animate-float-orb-1 {
+  animation: float-orb-1 12s ease-in-out infinite;
+}
+
+.animate-float-orb-2 {
+  animation: float-orb-2 16s ease-in-out infinite;
+}
+
+/* Scroll indicator bounce */
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.animate-bounce-soft {
+  animation: bounce-soft 2s ease-in-out infinite;
+}
+
+/* Step connector line pulse */
+@keyframes line-grow {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
