@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Upload, MessageSquare, Zap, Search, FileCheck } from "lucide-react";
+import { ArrowRight, Upload, MessageSquare, Zap, Search, FileCheck, User } from "lucide-react";
+import { useAuth } from "@/components/providers/AuthContext";
+import { Spinner } from "@heroui/react";
 
 const features = [
   {
@@ -25,6 +29,7 @@ const features = [
 ];
 
 export default function HomePage() {
+  const { user, loading } = useAuth();
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden">
       {/* Premium background glows */}
@@ -53,22 +58,46 @@ export default function HomePage() {
         </div>
 
         {/* CTAs */}
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/upload"
-            className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-violet-500/10 transition-all duration-200 hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] cursor-pointer"
-          >
-            <Upload className="h-4 w-4" />
-            Subir documento
-          </Link>
-          <Link
-            href="/chat"
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-[#0d0d11]/80 px-7 py-3.5 text-sm font-semibold text-zinc-200 shadow-sm transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900 active:scale-[0.98] cursor-pointer"
-          >
-            <MessageSquare className="h-4 w-4" />
-            Ir al chat
-            <ArrowRight className="h-4 w-4 text-zinc-500" />
-          </Link>
+        <div className="flex flex-wrap justify-center gap-4 min-h-[52px] items-center">
+          {loading ? (
+            <Spinner size="sm" color="accent" />
+          ) : user ? (
+            <>
+              <Link
+                href="/upload"
+                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-violet-500/10 transition-all duration-200 hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] cursor-pointer"
+              >
+                <Upload className="h-4 w-4" />
+                Subir documento
+              </Link>
+              <Link
+                href="/chat"
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-[#0d0d11]/80 px-7 py-3.5 text-sm font-semibold text-zinc-200 shadow-sm transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900 active:scale-[0.98] cursor-pointer"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Ir al chat
+                <ArrowRight className="h-4 w-4 text-zinc-500" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth"
+                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-violet-500/10 transition-all duration-200 hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] cursor-pointer"
+              >
+                <Zap className="h-4 w-4" />
+                Comenzar gratis
+                <ArrowRight className="h-4 w-4 text-violet-200" />
+              </Link>
+              <Link
+                href="/auth"
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-[#0d0d11]/80 px-7 py-3.5 text-sm font-semibold text-zinc-200 shadow-sm transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900 active:scale-[0.98] cursor-pointer"
+              >
+                <User className="h-4 w-4" />
+                Iniciar sesión
+              </Link>
+            </>
+          )}
         </div>
       </section>
 

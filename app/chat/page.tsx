@@ -1,13 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/providers/AuthContext";
 import { useChat } from "@/features/chat/hooks/useChat";
 import { ChatWindow } from "@/features/chat/components/ChatWindow";
 import { ChatInput } from "@/features/chat/components/ChatInput";
-import { Button } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 
 export default function ChatPage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const { messages, isLoading, sendMessage, clearChat } = useChat();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/auth");
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return (
+      <div className="flex flex-1 items-center justify-center bg-[#09090b]">
+        <Spinner size="lg" color="accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">

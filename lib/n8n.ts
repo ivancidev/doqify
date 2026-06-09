@@ -18,22 +18,28 @@ export interface QueryResponse {
 }
 
 /**
- * Upload a PDF file to n8n for processing.
- * n8n will extract text, create embeddings, and save to Supabase.
+ * Upload a PDF file to local API for processing.
  */
-export async function uploadDocument(file: File): Promise<UploadResponse> {
+export async function uploadDocument(file: File, token?: string): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("fileName", file.name);
 
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   try {
     const res = await fetch(UPLOAD_URL, {
       method: "POST",
+      headers,
       body: formData,
     });
 
     if (!res.ok) {
-      return { success: false, error: "Upload failed" };
+      const errData = await res.json().catch(() => ({}));
+      return { success: false, error: errData.error || "Upload failed" };
     }
 
     const data = await res.json();
@@ -44,21 +50,30 @@ export async function uploadDocument(file: File): Promise<UploadResponse> {
 }
 
 /**
- * Upload plain text to n8n for processing.
+ * Upload plain text to local API for processing.
  */
 export async function uploadText(
   text: string,
-  name: string
+  name: string,
+  token?: string
 ): Promise<UploadResponse> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   try {
     const res = await fetch(UPLOAD_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ text, name }),
     });
 
     if (!res.ok) {
-      return { success: false, error: "Upload failed" };
+      const errData = await res.json().catch(() => ({}));
+      return { success: false, error: errData.error || "Upload failed" };
     }
 
     const data = await res.json();
@@ -69,18 +84,26 @@ export async function uploadText(
 }
 
 /**
- * Send a question to n8n — it will query Supabase and return an AI answer.
+ * Send a question to local API to query Supabase and return an AI answer.
  */
-export async function queryDocuments(question: string): Promise<QueryResponse> {
+export async function queryDocuments(question: string, token?: string): Promise<QueryResponse> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   try {
     const res = await fetch(QUERY_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ question }),
     });
 
     if (!res.ok) {
-      return { answer: "Error connecting to the AI. Please try again." };
+      const errData = await res.json().catch(() => ({}));
+      return { answer: errData.error || "Error connecting to the AI. Please try again." };
     }
 
     const data = await res.json();
