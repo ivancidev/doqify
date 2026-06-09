@@ -7,6 +7,13 @@ export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: "Supabase environment variables are missing on the server. Please check your configuration." },
+        { status: 500 }
+      );
+    }
+
     const { question } = await request.json();
 
     if (!question || !question.trim()) {
