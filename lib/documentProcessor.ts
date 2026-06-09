@@ -75,9 +75,10 @@ export async function parsePDF(buffer: Buffer): Promise<string> {
     parser = new PDFParse({ data: buffer });
     const result = await parser.getText();
     return result.text || "";
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error parsing PDF file:", error);
-    throw new Error(`Failed to parse PDF: ${error.message || error}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to parse PDF: ${errorMessage}`);
   } finally {
     if (parser) {
       await parser.destroy().catch((err) => {

@@ -112,10 +112,11 @@ export async function POST(request: NextRequest) {
       chunksCount: chunks.length,
       message: "Document uploaded, processed, and indexed successfully.",
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred during processing.";
     console.error("Error in /api/upload route:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "An unexpected error occurred during processing." },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

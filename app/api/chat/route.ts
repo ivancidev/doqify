@@ -30,7 +30,12 @@ export async function POST(request: NextRequest) {
     const queryEmbedding = queryEmbeddings[0];
 
     // 2. Perform vector similarity search in Supabase using the match_documents RPC function
-    const { data: matchedDocs, error: matchError } = await supabase.rpc(
+    interface MatchedDoc {
+      name: string;
+      content: string;
+    }
+
+    const { data: matchedDocsData, error: matchError } = await supabase.rpc(
       "match_documents",
       {
         query_embedding: queryEmbedding,
@@ -47,11 +52,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const matchedDocs = (matchedDocsData || []) as MatchedDoc[];
+
     // 3. Construct the RAG context string
-    const hasContext = matchedDocs && matchedDocs.length > 0;
+    const hasContext = matchedDocs.length > 0;
     const contextText = hasContext
       ? matchedDocs
-          .map((doc: any) => `[Archivo: ${doc.name}]\n${doc.content}`)
+          .map((doc: MatchedDoc) => `[Archivo: ${doc.name}]\n${doc.content}`)
           .join("\n\n---\n\n")
       : "No relevant content found in the documents.";
 
@@ -78,17 +85,18 @@ ${contextText}`;
 
     // 6. Extract unique file names that served as sources
     const sources = hasContext
-      ? (Array.from(new Set(matchedDocs.map((doc: any) => doc.name))) as string[])
+      ? (Array.from(new Set(matchedDocs.map((doc: MatchedDoc) => doc.name))) as string[])
       : [];
 
     return NextResponse.json({
       answer: answer || "No he podido formular una respuesta.",
       sources,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred during processing.";
     console.error("Error in /api/chat route:", error);
     return NextResponse.json(
-      { error: error.message || "An unexpected error occurred during processing." },
+      { error: errorMessage },
       { status: 500 }
     );
   }
