@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { CloudUpload, FileText, AlertCircle } from "lucide-react";
@@ -34,56 +32,55 @@ export function DropZone({ onFileAccepted, isUploading }: DropZoneProps) {
     <div
       {...getRootProps()}
       className={cn(
-        "relative flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-10 transition-all duration-200 cursor-pointer",
+        "relative flex flex-col items-center justify-center gap-6 rounded-2xl border border-dashed p-12 text-center transition-all duration-300 cursor-pointer group",
         isDragActive && !isDragReject
-          ? "border-violet-500 bg-violet-600/10"
+          ? "border-violet-500 bg-violet-950/20 shadow-[0_0_40px_rgba(124,58,237,0.12)] scale-[1.01]"
           : isDragReject
-          ? "border-red-500 bg-red-500/10"
-          : "border-[#27272a] bg-[#18181b] hover:border-violet-500/50 hover:bg-violet-600/5",
-        isUploading && "cursor-not-allowed opacity-60"
+          ? "border-red-500 bg-red-950/20 shadow-[0_0_40px_rgba(239,68,68,0.12)]"
+          : "border-zinc-800 bg-[#0b0b0e] hover:border-violet-500/50 hover:bg-violet-950/5 hover:shadow-[0_0_30px_rgba(124,58,237,0.04)]",
+        isUploading && "cursor-not-allowed opacity-60 pointer-events-none"
       )}
     >
       <input {...getInputProps()} />
 
       <div
         className={cn(
-          "flex h-14 w-14 items-center justify-center rounded-full transition-colors",
-          isDragActive && !isDragReject ? "bg-violet-600/20" : "bg-[#27272a]"
+          "flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300 shadow-inner",
+          isDragActive && !isDragReject
+            ? "bg-violet-600 text-white scale-110 shadow-lg shadow-violet-500/25"
+            : isDragReject
+            ? "bg-red-500/20 text-red-400"
+            : "bg-zinc-900 text-zinc-400 group-hover:bg-zinc-800 group-hover:text-violet-400 group-hover:scale-105"
         )}
       >
         {isDragReject ? (
-          <AlertCircle className="h-7 w-7 text-red-400" />
+          <AlertCircle className="h-8 w-8 text-red-400 animate-pulse" />
         ) : lastFile ? (
-          <FileText className="h-7 w-7 text-violet-400" />
+          <FileText className="h-8 w-8 text-violet-400" />
         ) : (
-          <CloudUpload
-            className={cn(
-              "h-7 w-7 transition-colors",
-              isDragActive ? "text-violet-400" : "text-[#a1a1aa]"
-            )}
-          />
+          <CloudUpload className="h-8 w-8" />
         )}
       </div>
 
-      <div className="text-center">
+      <div className="flex flex-col gap-1.5 max-w-sm">
         {isDragReject ? (
-          <p className="text-sm font-medium text-red-400">Solo se aceptan archivos PDF</p>
+          <p className="text-sm font-semibold text-red-400">Solo se aceptan archivos PDF</p>
         ) : isDragActive ? (
-          <p className="text-sm font-medium text-violet-400">Suelta tu PDF aquí</p>
+          <p className="text-sm font-semibold text-violet-400">Suelta tu PDF aquí...</p>
         ) : lastFile ? (
           <>
-            <p className="text-sm font-medium text-[#fafafa]">{lastFile.name}</p>
-            <p className="mt-0.5 text-xs text-[#a1a1aa]">
-              {(lastFile.size / 1024 / 1024).toFixed(2)} MB · haz clic para reemplazar
+            <p className="text-sm font-semibold text-zinc-100 truncate max-w-xs">{lastFile.name}</p>
+            <p className="text-xs text-zinc-400">
+              {(lastFile.size / 1024 / 1024).toFixed(2)} MB · <span className="text-violet-400 font-medium group-hover:text-violet-300 transition-colors">haz clic para reemplazar</span>
             </p>
           </>
         ) : (
           <>
-            <p className="text-sm font-medium text-[#fafafa]">
-              Arrastra tu PDF aquí o{" "}
-              <span className="text-violet-400 underline underline-offset-2">haz clic para buscar</span>
+            <p className="text-sm font-medium text-zinc-200">
+              Arrastra tu PDF aquí o{"  "}
+              <span className="text-violet-400 font-semibold group-hover:text-violet-300 transition-colors underline underline-offset-4 decoration-violet-500/30">haz clic para buscar</span>
             </p>
-            <p className="mt-0.5 text-xs text-[#a1a1aa]">Solo archivos PDF · Máx. 50 MB</p>
+            <p className="text-xs text-zinc-500">Solo archivos PDF · Máx. 4 MB</p>
           </>
         )}
       </div>
