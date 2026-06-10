@@ -35,7 +35,14 @@ export function useUpload() {
           const data = await res.json();
           setDocuments(data.documents || []);
         } else if (isMounted) {
-          const errData = await res.json().catch(() => ({}));
+          const rawText = await res.text().catch(() => "");
+          console.error("fetchDocuments error status:", res.status, "text:", rawText);
+          let errData: { error?: string } = {};
+          try {
+            errData = JSON.parse(rawText) as { error?: string };
+          } catch {
+            errData = { error: `Error del servidor (${res.status}): ${rawText.substring(0, 120)}` };
+          }
           setError(errData.error || "No se pudieron cargar los documentos.");
         }
       } catch {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { getEmbeddings } from "@/lib/embeddings";
-import { parsePDF, splitText } from "@/lib/documentProcessor";
+import { splitText } from "@/lib/textSplitter";
 
 // Enforce standard Node.js runtime because pdf-parse needs Node FS/Buffer APIs
 export const runtime = "nodejs";
@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       name = file.name;
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
+      const { parsePDF } = await import("@/lib/documentProcessor");
       text = await parsePDF(buffer);
     } else {
       // JSON payload for pasted text
@@ -149,8 +150,17 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: "Supabase environment variables are missing on the server. Please check your Vercel configuration." },
+        { status: 500 }
+      );
+    }
+
     const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
@@ -213,6 +223,7 @@ export async function GET(request: NextRequest) {
       documents: Array.from(uniqueDocsMap.values())
     });
   } catch (error) {
+    console.error("Error in GET /api/upload:", error);
     const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
@@ -220,6 +231,13 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: "Supabase environment variables are missing on the server. Please check your Vercel configuration." },
+        { status: 500 }
+      );
+    }
+
     const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
@@ -265,6 +283,7 @@ export async function DELETE(request: NextRequest) {
       message: "Document deleted successfully."
     });
   } catch (error) {
+    console.error("Error in DELETE /api/upload:", error);
     const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
