@@ -148,3 +148,124 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET(request: NextRequest) {
+  try {
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
+      );
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Invalid or expired session. Please log in again." },
+        { status: 401 }
+      );
+    }
+    const userId = user.id;
+
+    const result = await supabase
+      .from("documents")
+      .select("name, created_at")
+      .eq("user_id", userId);
+
+    let data: { name: string; created_at?: string }[] | null = result.data as { name: string; created_at?: string }[] | null;
+    const error = result.error;
+
+    if (error) {
+      const fallbackResult = await supabase
+        .from("documents")
+        .select("name")
+        .eq("user_id", userId);
+      
+      if (fallbackResult.error) {
+        return NextResponse.json(
+          { error: fallbackResult.error.message },
+          { status: 500 }
+        );
+      }
+      data = fallbackResult.data as { name: string; created_at?: string }[] | null;
+    }
+
+    if (!data) {
+      return NextResponse.json({ documents: [] });
+    }
+
+    const uniqueDocsMap = new Map<string, { id: string; name: string; uploadedAt: string; type: string; status: string }>();
+
+    data.forEach((row: { name: string; created_at?: string }) => {
+      if (!uniqueDocsMap.has(row.name)) {
+        uniqueDocsMap.set(row.name, {
+          id: row.name,
+          name: row.name,
+          uploadedAt: row.created_at || new Date().toISOString(),
+          type: row.name.toLowerCase().endsWith(".pdf") ? "pdf" : "text",
+          status: "ready"
+        });
+      }
+    });
+
+    return NextResponse.json({
+      documents: Array.from(uniqueDocsMap.values())
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
+      );
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Invalid or expired session. Please log in again." },
+        { status: 401 }
+      );
+    }
+    const userId = user.id;
+
+    const { searchParams } = new URL(request.url);
+    const name = searchParams.get("name");
+
+    if (!name || !name.trim()) {
+      return NextResponse.json(
+        { error: "Document name is required." },
+        { status: 400 }
+      );
+    }
+
+    const { error: deleteError } = await supabase
+      .from("documents")
+      .delete()
+      .eq("name", name)
+      .eq("user_id", userId);
+
+    if (deleteError) {
+      return NextResponse.json(
+        { error: deleteError.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Document deleted successfully."
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}

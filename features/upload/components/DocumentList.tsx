@@ -8,6 +8,7 @@ import type { UploadedDocument } from "../types";
 interface DocumentListProps {
   documents: UploadedDocument[];
   onRemove: (id: string) => void;
+  isLoading?: boolean;
 }
 
 const statusConfig = {
@@ -28,16 +29,38 @@ const statusConfig = {
   },
 };
 
-function formatDate(date: Date) {
+function formatDate(date: Date | string | number) {
+  const parsedDate = date instanceof Date ? date : new Date(date);
   return new Intl.DateTimeFormat("es-ES", {
     day: "numeric",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(date);
+  }).format(parsedDate);
 }
 
-export function DocumentList({ documents, onRemove }: DocumentListProps) {
+export function DocumentList({ documents, onRemove, isLoading }: DocumentListProps) {
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-3">
+        {[1, 2, 3].map((n) => (
+          <div
+            key={n}
+            className="flex items-center gap-4 rounded-2xl border border-zinc-800/80 bg-[#0d0d11]/80 px-5 py-3.5 animate-pulse"
+          >
+            <div className="h-10 w-10 shrink-0 rounded-xl bg-zinc-900 border border-zinc-800" />
+            <div className="flex-1 space-y-2">
+              <div className="h-4 w-1/3 rounded bg-zinc-800" />
+              <div className="h-3 w-1/4 rounded bg-zinc-900" />
+            </div>
+            <div className="h-6 w-16 rounded-full bg-zinc-900 border border-zinc-800" />
+            <div className="h-8 w-8 rounded-xl bg-zinc-900/60" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (documents.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-zinc-800 bg-[#0b0b0e]/60 py-14 text-center backdrop-blur-sm">

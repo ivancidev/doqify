@@ -31,23 +31,25 @@ export default function ChatPage() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* Chat header */}
-      <div className="flex items-center justify-between border-b border-[#27272a] px-4 py-3 sm:px-6">
-        <div>
-          <h1 className="text-sm font-semibold text-[#fafafa]">Chat de documentos</h1>
-          <p className="text-xs text-[#a1a1aa]">Las respuestas se generan a partir de tus documentos</p>
+      <div className="border-b border-[#27272a]">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3 sm:px-6">
+          <div>
+            <h1 className="text-sm font-semibold text-[#fafafa]">Chat de documentos</h1>
+            <p className="text-xs text-[#a1a1aa]">Las respuestas se generan a partir de tus documentos</p>
+          </div>
+          {messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onPress={clearChat}
+              isDisabled={isLoading}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-[#a1a1aa] transition-colors hover:bg-red-500/10 hover:text-red-400"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Limpiar conversación
+            </Button>
+          )}
         </div>
-        {messages.length > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onPress={clearChat}
-            isDisabled={isLoading}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-[#a1a1aa] transition-colors hover:bg-red-500/10 hover:text-red-400"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            Limpiar conversación
-          </Button>
-        )}
       </div>
 
       {/* Messages */}

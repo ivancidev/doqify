@@ -6,14 +6,21 @@ import { useAuth } from "@/components/providers/AuthContext";
 import { useUpload } from "@/features/upload/hooks/useUpload";
 import { UploadTabs } from "@/features/upload/components/UploadTabs";
 import { DocumentList } from "@/features/upload/components/DocumentList";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Sparkles } from "lucide-react";
 import { Spinner } from "@heroui/react";
 
 export default function UploadPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { documents, isUploading, error, handleFileUpload, handleTextUpload, removeDocument } =
-    useUpload();
+  const { 
+    documents, 
+    isUploading, 
+    isLoadingDocs, 
+    error, 
+    handleFileUpload, 
+    handleTextUpload, 
+    removeDocument 
+  } = useUpload();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -59,18 +66,33 @@ export default function UploadPage() {
         />
       </div>
 
+      {/* Informative Security Tip Card */}
+      <div className="mt-6 rounded-2xl border border-violet-500/10 bg-violet-600/5 p-5 flex gap-3.5 items-start text-left relative overflow-hidden">
+        <Sparkles className="h-5 w-5 text-violet-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 relative z-10">
+          <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wide">Privacidad de tus datos</h4>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            doqify procesa tus documentos de forma totalmente segura. El texto se fragmenta y almacena con cifrado y aislamiento por usuario en base de datos. Ningún otro usuario puede acceder a tu información.
+          </p>
+        </div>
+      </div>
+
       {/* Document list */}
-      {documents.length > 0 && (
+      {(documents.length > 0 || isLoadingDocs) && (
         <div className="mt-10">
           <div className="mb-4 flex items-center justify-between px-1">
             <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-wider">
               Documentos subidos
             </h2>
             <span className="rounded-full bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 text-xs font-semibold text-zinc-400">
-              {documents.length}
+              {isLoadingDocs ? "..." : documents.length}
             </span>
           </div>
-          <DocumentList documents={documents} onRemove={removeDocument} />
+          <DocumentList 
+            documents={documents} 
+            onRemove={removeDocument} 
+            isLoading={isLoadingDocs} 
+          />
         </div>
       )}
     </div>

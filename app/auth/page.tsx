@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button, Spinner } from "@heroui/react";
-import { Mail, Lock, LogIn, UserPlus, AlertCircle, Sparkles } from "lucide-react";
+import { Mail, Lock, LogIn, UserPlus, AlertCircle, Zap, Sparkles } from "lucide-react";
+import { motion } from "motion/react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useAuth } from "@/components/providers/AuthContext";
+import { DotGrid } from "@/features/landing/components/DotGrid";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -17,6 +20,15 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { currentTarget, clientX, clientY } = e;
+    const { left, top } = currentTarget.getBoundingClientRect();
+    setMousePosition({ x: clientX - left, y: clientY - top });
+  };
 
   // Redirect if already logged in
   useEffect(() => {
@@ -70,26 +82,60 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-16">
+    <div 
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative flex flex-1 flex-col items-center justify-center px-4 py-16 overflow-hidden"
+    >
+      <DotGrid />
+
+      {/* Mouse follow radial glow */}
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(124, 58, 237, 0.08), transparent 85%)`,
+          }}
+        />
+      )}
+
       {/* Background glow effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-600/5 rounded-full blur-[100px] pointer-events-none -z-10" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-fuchsia-600/5 rounded-full blur-[80px] pointer-events-none -z-10" />
 
-      <div className="w-full max-w-md rounded-3xl border border-zinc-800/80 bg-[#141419]/60 backdrop-blur-xl p-8 shadow-2xl shadow-black/40">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md rounded-3xl border border-zinc-800/80 bg-[#141419]/60 backdrop-blur-xl p-8 shadow-2xl shadow-black/40 relative z-10"
+      >
         {/* Header */}
-        <div className="mb-8 text-center">
-          <span className="inline-flex items-center gap-1 rounded-full border border-violet-500/20 bg-violet-600/10 px-3 py-1 text-xs font-semibold text-violet-400">
-            <Sparkles className="h-3 w-3" />
-            Acceso seguro a doqify
-          </span>
-          <h1 className="mt-4 text-2xl font-extrabold text-zinc-50 tracking-tight">
-            {isLogin ? "Bienvenido de nuevo" : "Crea tu cuenta"}
-          </h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            {isLogin
-              ? "Ingresa tus datos para acceder a tu panel"
-              : "Registra tus credenciales para comenzar a chatear"}
-          </p>
+        <div className="mb-8 text-center flex flex-col items-center">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80 mb-5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600">
+              <Zap className="h-4.5 w-4.5 text-white" />
+            </span>
+            <span className="text-xl font-semibold tracking-tight text-zinc-50">doqify</span>
+          </Link>
+
+          <motion.div
+            key={isLogin ? "login" : "signup"}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full mt-4"
+          >
+            <h1 className="text-2xl font-extrabold text-zinc-50 tracking-tight">
+              {isLogin ? "Bienvenido de nuevo" : "Crea tu cuenta"}
+            </h1>
+            <p className="mt-1 text-sm text-zinc-400">
+              {isLogin
+                ? "Ingresa tus datos para acceder a tu panel"
+                : "Registra tus credenciales para comenzar a chatear"}
+            </p>
+          </motion.div>
         </div>
 
         {/* Error banner */}
@@ -152,16 +198,26 @@ export default function AuthPage() {
           >
             {loading ? (
               <Spinner size="sm" color="current" />
-            ) : isLogin ? (
-              <>
-                <LogIn className="h-4 w-4" />
-                Iniciar sesión
-              </>
             ) : (
-              <>
-                <UserPlus className="h-4 w-4" />
-                Registrarse
-              </>
+              <motion.div
+                key={isLogin ? "loginBtn" : "signupBtn"}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center justify-center gap-2"
+              >
+                {isLogin ? (
+                  <>
+                    <LogIn className="h-4 w-4" />
+                    <span>Iniciar sesión</span>
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="h-4 w-4" />
+                    <span>Registrarse</span>
+                  </>
+                )}
+              </motion.div>
             )}
           </Button>
         </form>
@@ -182,7 +238,7 @@ export default function AuthPage() {
               : "¿Ya tienes una cuenta? Inicia sesión"}
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

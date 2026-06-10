@@ -25,25 +25,27 @@ export function ChatWindow({ messages, isLoading, onSuggest }: ChatWindowProps) 
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-6">
-      {messages.map((msg) => (
-        <ChatMessage key={msg.id} message={msg} />
-      ))}
+    <div className="flex flex-1 flex-col overflow-y-auto px-4">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 py-6 flex-1">
+        {messages.map((msg) => (
+          <ChatMessage key={msg.id} message={msg} />
+        ))}
 
-      {/* Indicador de carga */}
-      {isLoading && (
-        <div className="flex gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#27272a]">
-            <Bot className="h-4 w-4 text-violet-400" />
+        {/* Indicador de carga */}
+        {isLoading && (
+          <div className="flex gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#27272a]">
+              <Bot className="h-4 w-4 text-violet-400" />
+            </div>
+            <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-[#18181b] px-4 py-2.5">
+              <Spinner size="sm" color="current" className="text-violet-400" />
+              <span className="text-sm text-[#a1a1aa]">Analizando…</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-[#18181b] px-4 py-2.5">
-            <Spinner size="sm" color="current" className="text-violet-400" />
-            <span className="text-sm text-[#a1a1aa]">Analizando…</span>
-          </div>
-        </div>
-      )}
+        )}
 
-      <div ref={bottomRef} />
+        <div ref={bottomRef} />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -17,6 +18,8 @@ import { useAuth } from "@/components/providers/AuthContext";
 import { Spinner } from "@heroui/react";
 import { motion, type Variants } from "motion/react";
 import { SiSupabase, SiSupabaseHex } from "@icons-pack/react-simple-icons";
+import { DotGrid } from "@/features/landing/components/DotGrid";
+import { InteractiveDemo } from "@/features/landing/components/InteractiveDemo";
 
 /* ─── Variants ─── */
 const fadeUp: Variants = {
@@ -90,33 +93,19 @@ const features = [
   },
 ];
 
-/* ─── Dot grid ─── */
-function DotGrid() {
-  return (
-    <svg
-      className="absolute inset-0 h-full w-full opacity-[0.07] pointer-events-none select-none"
-      aria-hidden="true"
-    >
-      <defs>
-        <pattern
-          id="hero-dots"
-          x="0"
-          y="0"
-          width="28"
-          height="28"
-          patternUnits="userSpaceOnUse"
-        >
-          <circle cx="2" cy="2" r="2.5" fill="#7c3aed" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#hero-dots)" />
-    </svg>
-  );
-}
+
 
 /* ─── Page ─── */
 export default function HomePage() {
   const { user, loading } = useAuth();
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { currentTarget, clientX, clientY } = e;
+    const { left, top } = currentTarget.getBoundingClientRect();
+    setMousePosition({ x: clientX - left, y: clientY - top });
+  };
 
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden">
@@ -140,8 +129,23 @@ export default function HomePage() {
       {/* ═══════════════════════════════
           HERO
       ═══════════════════════════════ */}
-      <section className="relative flex flex-1 flex-col items-center justify-center gap-0 px-6 pt-28 pb-20 text-center md:pt-40 md:pb-28 overflow-hidden">
+      <section
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="relative flex flex-1 flex-col items-center justify-center gap-0 px-6 pt-28 pb-20 text-center md:pt-40 md:pb-28 overflow-hidden"
+      >
         <DotGrid />
+
+        {/* Interactive Radial Glow */}
+        {isHovered && (
+          <div
+            className="pointer-events-none absolute inset-0 -z-10 transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(124, 58, 237, 0.1), transparent 80%)`,
+            }}
+          />
+        )}
 
         <motion.div
           className="flex flex-col items-center gap-8 w-full"
@@ -149,18 +153,6 @@ export default function HomePage() {
           initial="hidden"
           animate="show"
         >
-          {/* Badge */}
-          <motion.div variants={fadeUp}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-violet-500/25 bg-violet-600/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-violet-400 shadow-sm shadow-violet-500/5">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              <Zap className="h-3 w-3" />
-              Asistente inteligente de documentos RAG
-            </span>
-          </motion.div>
-
           {/* Headline */}
           <motion.div variants={fadeUp} className="max-w-4xl space-y-6">
             <h1 className="text-5xl font-extrabold leading-[1.12] tracking-tight sm:text-7xl">
@@ -172,15 +164,15 @@ export default function HomePage() {
                   backgroundClip: "text",
                 }}
               >
-                Tu asistente que entiende
+                Tus documentos,
               </span>{" "}
               <span className="shimmer-text">
-                cada palabra de tus documentos
+                convertidos en respuestas directas
               </span>
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-zinc-400 sm:text-xl leading-relaxed">
-              Sube cualquier PDF o texto y obtén respuestas precisas al instante,
-              sin tener que leer página por página.
+              Sube tus archivos y extrae la información exacta que necesitas en segundos,
+              sin búsquedas infinitas ni lecturas redundantes.
             </p>
           </motion.div>
 
@@ -229,6 +221,9 @@ export default function HomePage() {
               </>
             )}
           </motion.div>
+
+          {/* Interactive Demo */}
+          <InteractiveDemo />
         </motion.div>
 
         {/* Scroll indicator */}
@@ -427,6 +422,65 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════
+          FINAL CTA
+      ═══════════════════════════════ */}
+      <section className="border-t border-zinc-900 px-6 py-20 md:py-28 relative overflow-hidden">
+        {/* Glow Orb in background */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none -z-10"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)",
+            filter: "blur(40px)",
+          }}
+        />
+
+        <div className="mx-auto max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative rounded-3xl border border-violet-500/20 bg-zinc-900/20 px-8 py-16 text-center backdrop-blur-md overflow-hidden shadow-2xl shadow-violet-500/5 sm:px-16"
+          >
+            {/* Grid overlay */}
+            <DotGrid />
+
+            <div className="relative z-10 max-w-2xl mx-auto space-y-8">
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl leading-tight text-white">
+                Empieza a entender tus documentos en segundos
+              </h2>
+              <p className="text-base text-zinc-400 sm:text-lg leading-relaxed">
+                Únete a doqify de forma gratuita durante nuestra beta y optimiza tu tiempo. Sube tus PDFs o textos y comienza a chatear con ellos al instante.
+              </p>
+              <div className="flex justify-center pt-4">
+                {loading ? (
+                  <Spinner size="sm" color="accent" />
+                ) : user ? (
+                  <Link
+                    href="/upload"
+                    className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                  >
+                    <Upload className="h-5 w-5" />
+                    Subir documento
+                  </Link>
+                ) : (
+                  <Link
+                    href="/auth"
+                    className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                  >
+                    <Zap className="h-5 w-5" />
+                    Comenzar gratis
+                    <ArrowRight className="h-5 w-5 text-violet-200" />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 

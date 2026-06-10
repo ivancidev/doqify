@@ -8,11 +8,12 @@ interface ChatMessageProps {
   message: Message;
 }
 
-function formatTime(date: Date) {
+function formatTime(date: Date | string | number) {
+  const parsedDate = date instanceof Date ? date : new Date(date);
   return new Intl.DateTimeFormat("es-ES", {
     hour: "2-digit",
     minute: "2-digit",
-  }).format(date);
+  }).format(parsedDate);
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
