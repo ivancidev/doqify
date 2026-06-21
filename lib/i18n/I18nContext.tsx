@@ -22,11 +22,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocaleState(savedLocale);
     } else {
-      // Check browser language
-      const browserLang = navigator.language.split("-")[0];
-      if (browserLang === "es") {
-        setLocaleState("es");
-      }
+      setLocaleState("en");
     }
     setMounted(true);
   }, []);
