@@ -4,6 +4,7 @@ import { useState, useRef, KeyboardEvent } from "react";
 import { Button, Spinner } from "@heroui/react";
 import { SendHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -11,6 +12,7 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ onSend, isLoading }: ChatInputProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -49,7 +51,7 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             onChange={(e) => setValue(e.target.value)}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Escribe tu pregunta… (Enter para enviar, Shift+Enter para nueva línea)"
+            placeholder={t("chatinput.placeholder")}
             disabled={isLoading}
             className={cn(
               "flex-1 resize-none bg-transparent text-sm text-[#fafafa] placeholder:text-[#a1a1aa] focus:outline-none disabled:opacity-50",
@@ -81,7 +83,7 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
       </div>
 
       <p className="mt-2 text-center text-xs text-[#a1a1aa]">
-        Las respuestas se basan en el contenido de tus documentos.
+        {t("chatinput.footer")}
       </p>
     </div>
   );

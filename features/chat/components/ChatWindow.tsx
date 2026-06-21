@@ -6,6 +6,7 @@ import { EmptyChat } from "./EmptyChat";
 import { Spinner } from "@heroui/react";
 import { Bot } from "lucide-react";
 import type { Message } from "../types";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface ChatWindowProps {
   messages: Message[];
@@ -14,6 +15,7 @@ interface ChatWindowProps {
 }
 
 export function ChatWindow({ messages, isLoading, onSuggest }: ChatWindowProps) {
+  const { t } = useTranslation();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export function ChatWindow({ messages, isLoading, onSuggest }: ChatWindowProps) 
             </div>
             <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-[#18181b] px-4 py-2.5">
               <Spinner size="sm" color="current" className="text-violet-400" />
-              <span className="text-sm text-[#a1a1aa]">Analizando…</span>
+              <span className="text-sm text-[#a1a1aa]">{t("chatinput.analyzing")}</span>
             </div>
           </div>
         )}

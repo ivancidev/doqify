@@ -3,6 +3,7 @@
 import { Tabs, Spinner } from "@heroui/react";
 import { DropZone } from "./DropZone";
 import { TextInput } from "./TextInput";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface UploadTabsProps {
   onFileUpload: (file: File) => void;
@@ -11,25 +12,26 @@ interface UploadTabsProps {
 }
 
 export function UploadTabs({ onFileUpload, onTextUpload, isUploading }: UploadTabsProps) {
+  const { t } = useTranslation();
   return (
     <Tabs defaultSelectedKey="pdf" variant="secondary" className="w-full">
       <Tabs.ListContainer>
         <Tabs.List
-          aria-label="Método de carga"
+          aria-label={t("upload.tabs.ariaLabel")}
           className="border-b border-zinc-800/60 pb-px flex gap-6 text-sm font-semibold"
         >
           <Tabs.Tab 
             id="pdf"
             className="pb-3 text-zinc-400 data-[selected=true]:text-zinc-100 cursor-pointer outline-none transition-colors"
           >
-            Subir PDF
+            {t("upload.tabs.pdf")}
             <Tabs.Indicator />
           </Tabs.Tab>
           <Tabs.Tab 
             id="text"
             className="pb-3 text-zinc-400 data-[selected=true]:text-zinc-100 cursor-pointer outline-none transition-colors"
           >
-            Pegar texto
+            {t("upload.tabs.text")}
             <Tabs.Indicator />
           </Tabs.Tab>
         </Tabs.List>
@@ -42,8 +44,8 @@ export function UploadTabs({ onFileUpload, onTextUpload, isUploading }: UploadTa
             <div className="flex items-center gap-3.5 rounded-2xl border border-violet-500/20 bg-violet-600/5 px-5 py-4 shadow-[0_0_30px_rgba(124,58,237,0.06)] animate-pulse">
               <Spinner size="sm" color="accent" />
               <div className="flex flex-col">
-                <span className="text-sm font-semibold text-violet-200">Procesando tu documento…</span>
-                <span className="text-xs text-violet-400/85">Extrayendo texto y generando embeddings vectoriales con Cohere</span>
+                <span className="text-sm font-semibold text-violet-200">{t("upload.processing")}</span>
+                <span className="text-xs text-violet-400/85">{t("upload.processingDesc")}</span>
               </div>
             </div>
           )}

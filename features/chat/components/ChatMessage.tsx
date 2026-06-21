@@ -3,20 +3,22 @@
 import { cn } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import type { Message } from "../types";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface ChatMessageProps {
   message: Message;
 }
 
-function formatTime(date: Date | string | number) {
+function formatTime(date: Date | string | number, locale: string) {
   const parsedDate = date instanceof Date ? date : new Date(date);
-  return new Intl.DateTimeFormat("es-ES", {
+  return new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-US", {
     hour: "2-digit",
     minute: "2-digit",
   }).format(parsedDate);
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
+  const { locale } = useTranslation();
   const isUser = message.role === "user";
 
   return (
@@ -68,7 +70,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
 
         {/* Hora */}
-        <span className="text-xs text-[#a1a1aa]">{formatTime(message.timestamp)}</span>
+        <span className="text-xs text-[#a1a1aa]">{formatTime(message.timestamp, locale)}</span>
       </div>
     </div>
   );

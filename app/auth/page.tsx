@@ -8,11 +8,13 @@ import { Mail, Lock, LogIn, UserPlus, AlertCircle, Zap, Sparkles } from "lucide-
 import { motion } from "motion/react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useAuth } from "@/components/providers/AuthContext";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 import { DotGrid } from "@/features/landing/components/DotGrid";
 
 export default function AuthPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -63,11 +65,11 @@ export default function AuthPage() {
           },
         });
         if (signUpErr) throw signUpErr;
-        setSuccessMessage("¡Cuenta creada! Revisa tu correo electrónico para confirmar tu registro.");
+        setSuccessMessage(t("auth.accountCreated"));
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
-      setError(errorMsg || "Ocurrió un error inesperado.");
+      setError(errorMsg || t("auth.unexpectedError"));
     } finally {
       setLoading(false);
     }
@@ -128,12 +130,12 @@ export default function AuthPage() {
             className="w-full mt-4"
           >
             <h1 className="text-2xl font-extrabold text-zinc-50 tracking-tight">
-              {isLogin ? "Bienvenido de nuevo" : "Crea tu cuenta"}
+              {isLogin ? t("auth.welcome") : t("auth.createAccount")}
             </h1>
             <p className="mt-1 text-sm text-zinc-400">
               {isLogin
-                ? "Ingresa tus datos para acceder a tu panel"
-                : "Registra tus credenciales para comenzar a chatear"}
+                ? t("auth.welcomeDesc")
+                : t("auth.createAccountDesc")}
             </p>
           </motion.div>
         </div>
@@ -158,13 +160,13 @@ export default function AuthPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Correo electrónico
+              {t("auth.email")}
             </label>
             <div className="relative flex items-center">
               <Mail className="absolute left-3.5 h-4 w-4 text-zinc-500" />
               <input
                 type="email"
-                placeholder="nombre@ejemplo.com"
+                placeholder={t("auth.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
@@ -175,7 +177,7 @@ export default function AuthPage() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Contraseña
+              {t("auth.password")}
             </label>
             <div className="relative flex items-center">
               <Lock className="absolute left-3.5 h-4 w-4 text-zinc-500" />
@@ -209,12 +211,12 @@ export default function AuthPage() {
                 {isLogin ? (
                   <>
                     <LogIn className="h-4 w-4" />
-                    <span>Iniciar sesión</span>
+                    <span>{t("auth.signIn")}</span>
                   </>
                 ) : (
                   <>
                     <UserPlus className="h-4 w-4" />
-                    <span>Registrarse</span>
+                    <span>{t("auth.signUp")}</span>
                   </>
                 )}
               </motion.div>
@@ -234,8 +236,8 @@ export default function AuthPage() {
             className="text-xs text-zinc-400 hover:text-violet-400 transition-colors cursor-pointer outline-none bg-transparent border-none"
           >
             {isLogin
-              ? "¿No tienes una cuenta? Regístrate"
-              : "¿Ya tienes una cuenta? Inicia sesión"}
+              ? t("auth.noAccount")
+              : t("auth.hasAccount")}
           </button>
         </div>
       </motion.div>

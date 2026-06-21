@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { CloudUpload, FileText, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface DropZoneProps {
   onFileAccepted: (file: File) => void;
@@ -9,6 +10,7 @@ interface DropZoneProps {
 }
 
 export function DropZone({ onFileAccepted, isUploading }: DropZoneProps) {
+  const { t } = useTranslation();
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
@@ -64,23 +66,23 @@ export function DropZone({ onFileAccepted, isUploading }: DropZoneProps) {
 
       <div className="flex flex-col gap-1.5 max-w-sm">
         {isDragReject ? (
-          <p className="text-sm font-semibold text-red-400">Solo se aceptan archivos PDF</p>
+          <p className="text-sm font-semibold text-red-400">{t("dropzone.reject")}</p>
         ) : isDragActive ? (
-          <p className="text-sm font-semibold text-violet-400">Suelta tu PDF aquí...</p>
+          <p className="text-sm font-semibold text-violet-400">{t("dropzone.active")}</p>
         ) : lastFile ? (
           <>
             <p className="text-sm font-semibold text-zinc-100 truncate max-w-xs">{lastFile.name}</p>
             <p className="text-xs text-zinc-400">
-              {(lastFile.size / 1024 / 1024).toFixed(2)} MB · <span className="text-violet-400 font-medium group-hover:text-violet-300 transition-colors">haz clic para reemplazar</span>
+              {(lastFile.size / 1024 / 1024).toFixed(2)} MB · <span className="text-violet-400 font-medium group-hover:text-violet-300 transition-colors">{t("dropzone.replace")}</span>
             </p>
           </>
         ) : (
           <>
             <p className="text-sm font-medium text-zinc-200">
-              Arrastra tu PDF aquí o{"  "}
-              <span className="text-violet-400 font-semibold group-hover:text-violet-300 transition-colors underline underline-offset-4 decoration-violet-500/30">haz clic para buscar</span>
+              {t("dropzone.dragPrompt")}{"  "}
+              <span className="text-violet-400 font-semibold group-hover:text-violet-300 transition-colors underline underline-offset-4 decoration-violet-500/30">{t("dropzone.clickPrompt")}</span>
             </p>
-            <p className="text-xs text-zinc-500">Solo archivos PDF · Máx. 4 MB</p>
+            <p className="text-xs text-zinc-500">{t("dropzone.limit")}</p>
           </>
         )}
       </div>

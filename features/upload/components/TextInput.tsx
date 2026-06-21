@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, Spinner } from "@heroui/react";
 import { Input } from "@heroui/react";
 import { FileSignature } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface TextInputProps {
   onSubmit: (text: string, name: string) => void;
@@ -11,6 +12,7 @@ interface TextInputProps {
 }
 
 export function TextInput({ onSubmit, isUploading }: TextInputProps) {
+  const { t, locale } = useTranslation();
   const [name, setName] = useState("");
   const [text, setText] = useState("");
 
@@ -28,11 +30,11 @@ export function TextInput({ onSubmit, isUploading }: TextInputProps) {
       {/* Nombre del documento */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-          Nombre del documento
+          {t("textinput.nameLabel")}
         </label>
         <Input
           fullWidth
-          placeholder="Ej. Manual de Empleado, Políticas Corporativas…"
+          placeholder={t("textinput.namePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isUploading}
@@ -43,18 +45,18 @@ export function TextInput({ onSubmit, isUploading }: TextInputProps) {
       {/* Contenido */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-          Contenido del documento
+          {t("textinput.contentLabel")}
         </label>
         <textarea
           rows={8}
-          placeholder="Pega aquí el texto de tu documento..."
+          placeholder={t("textinput.contentPlaceholder")}
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={isUploading}
           className="w-full resize-none rounded-xl border border-zinc-800 bg-[#0d0d11] px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-500 focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/20 outline-none disabled:opacity-50 transition-all duration-200 shadow-inner"
         />
         <p className="text-right text-xs text-zinc-500 font-medium">
-          {text.length.toLocaleString("es")} caracteres
+          {text.length.toLocaleString(locale === "es" ? "es" : "en")} {t("textinput.charCount")}
         </p>
       </div>
 
@@ -71,7 +73,7 @@ export function TextInput({ onSubmit, isUploading }: TextInputProps) {
             ) : (
               <FileSignature className="h-4 w-4" />
             )}
-            {isPending ? "Subiendo…" : "Subir texto"}
+            {isPending ? t("textinput.uploading") : t("textinput.uploadBtn")}
           </>
         )}
       </Button>

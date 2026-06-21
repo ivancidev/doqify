@@ -15,6 +15,7 @@ import {
   Cpu,
 } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthContext";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 import { Spinner } from "@heroui/react";
 import { motion, type Variants } from "motion/react";
 import { SiSupabase, SiSupabaseHex } from "@icons-pack/react-simple-icons";
@@ -32,72 +33,10 @@ const stagger: Variants = {
 };
 
 
-/* ─── Data ─── */
-const techStack = [
-  {
-    name: "Supabase",
-    color: `#${SiSupabaseHex}`,
-    icon: SiSupabase,
-    label: "Base de datos vectorial",
-  },
-  {
-    name: "Cohere",
-    color: "#a78bfa",
-    icon: Brain,
-    label: "Embeddings semánticos",
-  },
-  {
-    name: "Groq",
-    color: "#F55036",
-    icon: Cpu,
-    label: "Inferencia ultrarrápida",
-  },
-];
-
-const stats = [
-  { value: "< 3s", label: "Procesamiento" },
-  { value: "PDF + Texto", label: "Formatos" },
-  { value: "100% Privado", label: "Tus datos" },
-];
-
-const steps = [
-  { num: "01", title: "Sube", desc: "Tu PDF o texto" },
-  { num: "02", title: "Pregunta", desc: "En lenguaje natural" },
-  { num: "03", title: "Obtén", desc: "Respuesta precisa" },
-];
-
-const features = [
-  {
-    icon: Upload,
-    title: "Sube cualquier documento",
-    description:
-      "Arrastra y suelta PDFs o pega texto directamente. Se procesa y fragmenta de forma automática.",
-  },
-  {
-    icon: MessageSquare,
-    title: "Chatea con tus documentos",
-    description:
-      "Haz preguntas en lenguaje natural y obtén respuestas precisas basadas en tu contenido en tiempo real.",
-  },
-  {
-    icon: Search,
-    title: "Búsqueda inteligente",
-    description:
-      "El motor vectorial analiza el contenido completo y encuentra el contexto exacto al instante.",
-  },
-  {
-    icon: FileCheck,
-    title: "Respuestas en contexto",
-    description:
-      "Respuestas directas generadas exclusivamente a partir de las fuentes que tú mismo cargues.",
-  },
-];
-
-
-
 /* ─── Page ─── */
 export default function HomePage() {
   const { user, loading } = useAuth();
+  const { t, locale } = useTranslation();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
@@ -106,6 +45,62 @@ export default function HomePage() {
     const { left, top } = currentTarget.getBoundingClientRect();
     setMousePosition({ x: clientX - left, y: clientY - top });
   };
+
+  const techStack = [
+    {
+      name: "Supabase",
+      color: `#${SiSupabaseHex}`,
+      icon: SiSupabase,
+      label: t("home.tech.vector"),
+    },
+    {
+      name: "Cohere",
+      color: "#a78bfa",
+      icon: Brain,
+      label: t("home.tech.embeddings"),
+    },
+    {
+      name: "Groq",
+      color: "#F55036",
+      icon: Cpu,
+      label: t("home.tech.inference"),
+    },
+  ];
+
+  const stats = [
+    { value: "< 3s", label: t("home.stats.processing") },
+    { value: locale === "es" ? "PDF + Texto" : "PDF + Text", label: t("home.stats.formats") },
+    { value: locale === "es" ? "100% Privado" : "100% Private", label: t("home.stats.yourData") },
+  ];
+
+  const steps = [
+    { num: "01", title: t("home.steps.upload.title"), desc: t("home.steps.upload.desc") },
+    { num: "02", title: t("home.steps.ask.title"), desc: t("home.steps.ask.desc") },
+    { num: "03", title: t("home.steps.get.title"), desc: t("home.steps.get.desc") },
+  ];
+
+  const features = [
+    {
+      icon: Upload,
+      title: t("home.features.upload.title"),
+      description: t("home.features.upload.desc"),
+    },
+    {
+      icon: MessageSquare,
+      title: t("home.features.chat.title"),
+      description: t("home.features.chat.desc"),
+    },
+    {
+      icon: Search,
+      title: t("home.features.search.title"),
+      description: t("home.features.search.desc"),
+    },
+    {
+      icon: FileCheck,
+      title: t("home.features.answers.title"),
+      description: t("home.features.answers.desc"),
+    },
+  ];
 
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden">
@@ -164,15 +159,14 @@ export default function HomePage() {
                   backgroundClip: "text",
                 }}
               >
-                Tus documentos,
+                {t("home.title1")}
               </span>{" "}
               <span className="shimmer-text">
-                convertidos en respuestas directas
+                {t("home.title2")}
               </span>
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-zinc-400 sm:text-xl leading-relaxed">
-              Sube tus archivos y extrae la información exacta que necesitas en segundos,
-              sin búsquedas infinitas ni lecturas redundantes.
+              {t("home.subtitle")}
             </p>
           </motion.div>
 
@@ -190,14 +184,14 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <Upload className="h-5 w-5" />
-                  Subir documento
+                  {t("home.uploadDoc")}
                 </Link>
                 <Link
                   href="/chat"
                   className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-8 py-4 text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <MessageSquare className="h-5 w-5" />
-                  Ir al chat
+                  {t("home.goToChat")}
                   <ArrowRight className="h-5 w-5 text-zinc-400" />
                 </Link>
               </>
@@ -208,7 +202,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <Zap className="h-5 w-5" />
-                  Comenzar gratis
+                  {t("home.startFree")}
                   <ArrowRight className="h-5 w-5 text-violet-200" />
                 </Link>
                 <Link
@@ -216,7 +210,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-8 py-4 text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <User className="h-5 w-5" />
-                  Iniciar sesión
+                  {t("home.login")}
                 </Link>
               </>
             )}
@@ -234,7 +228,7 @@ export default function HomePage() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
         >
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-600">
-            Ver más
+            {t("home.seeMore")}
           </span>
           <ChevronDown className="animate-bounce-soft h-5 w-5 text-zinc-600" />
         </motion.div>
@@ -253,7 +247,7 @@ export default function HomePage() {
             className="mb-14 text-center"
           >
             <span className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-600">
-              Powered by
+              {t("home.poweredBy")}
             </span>
           </motion.div>
 
@@ -329,10 +323,10 @@ export default function HomePage() {
             className="mb-16 text-center"
           >
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-violet-500">
-              Cómo funciona
+              {t("home.howItWorks")}
             </span>
             <h2 className="mt-3 text-3xl font-bold text-zinc-100 sm:text-4xl">
-              Tres pasos, cero fricción
+              {t("home.threeSteps")}
             </h2>
           </motion.div>
 
@@ -393,10 +387,10 @@ export default function HomePage() {
             className="mb-16 text-center"
           >
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-violet-500">
-              Características
+              {t("home.features.label")}
             </span>
             <h2 className="mt-3 text-3xl font-bold text-zinc-100 sm:text-4xl">
-              Todo lo que necesitas
+              {t("home.features.title")}
             </h2>
           </motion.div>
 
@@ -452,10 +446,10 @@ export default function HomePage() {
 
             <div className="relative z-10 max-w-2xl mx-auto space-y-8">
               <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl leading-tight text-white">
-                Empieza a entender tus documentos en segundos
+                {t("home.cta.title")}
               </h2>
               <p className="text-base text-zinc-400 sm:text-lg leading-relaxed">
-                Únete a doqify de forma gratuita durante nuestra beta y optimiza tu tiempo. Sube tus PDFs o textos y comienza a chatear con ellos al instante.
+                {t("home.cta.desc")}
               </p>
               <div className="flex justify-center pt-4">
                 {loading ? (
@@ -466,7 +460,7 @@ export default function HomePage() {
                     className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
                   >
                     <Upload className="h-5 w-5" />
-                    Subir documento
+                    {t("home.uploadDoc")}
                   </Link>
                 ) : (
                   <Link
@@ -474,7 +468,7 @@ export default function HomePage() {
                     className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
                   >
                     <Zap className="h-5 w-5" />
-                    Comenzar gratis
+                    {t("home.startFree")}
                     <ArrowRight className="h-5 w-5 text-violet-200" />
                   </Link>
                 )}
@@ -490,10 +484,10 @@ export default function HomePage() {
       <footer className="border-t border-zinc-900 bg-[#09090b] px-6 py-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
           <span className="text-xs text-zinc-600 font-medium">
-            © {new Date().getFullYear()} doqify · Todos los derechos reservados
+            {t("home.footer.rights", { year: new Date().getFullYear() })}
           </span>
           <span className="text-xs text-zinc-600 font-medium">
-            Consulta tus documentos de forma segura e inteligente
+            {t("home.footer.secure")}
           </span>
         </div>
       </footer>

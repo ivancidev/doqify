@@ -4,6 +4,7 @@ import { Button, Spinner } from "@heroui/react";
 import { FileText, FileType2, Trash2, CheckCircle2, AlertCircle, InboxIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UploadedDocument } from "../types";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 interface DocumentListProps {
   documents: UploadedDocument[];
@@ -11,27 +12,9 @@ interface DocumentListProps {
   isLoading?: boolean;
 }
 
-const statusConfig = {
-  uploading: {
-    label: "Procesando…",
-    className: "text-violet-400 bg-violet-500/10 border border-violet-500/20",
-    icon: null,
-  },
-  ready: {
-    label: "Listo",
-    className: "text-[#10b981] bg-[#10b981]/10 border border-[#10b981]/20",
-    icon: CheckCircle2,
-  },
-  error: {
-    label: "Error",
-    className: "text-red-400 bg-red-500/10 border border-red-500/20",
-    icon: AlertCircle,
-  },
-};
-
-function formatDate(date: Date | string | number) {
+function formatDate(date: Date | string | number, locale: string) {
   const parsedDate = date instanceof Date ? date : new Date(date);
-  return new Intl.DateTimeFormat("es-ES", {
+  return new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-US", {
     day: "numeric",
     month: "short",
     hour: "2-digit",
@@ -40,6 +23,26 @@ function formatDate(date: Date | string | number) {
 }
 
 export function DocumentList({ documents, onRemove, isLoading }: DocumentListProps) {
+  const { t, locale } = useTranslation();
+
+  const statusConfig = {
+    uploading: {
+      label: t("doclist.uploading"),
+      className: "text-violet-400 bg-violet-500/10 border border-violet-500/20",
+      icon: null,
+    },
+    ready: {
+      label: t("doclist.ready"),
+      className: "text-[#10b981] bg-[#10b981]/10 border border-[#10b981]/20",
+      icon: CheckCircle2,
+    },
+    error: {
+      label: t("doclist.error"),
+      className: "text-red-400 bg-red-500/10 border border-red-500/20",
+      icon: AlertCircle,
+    },
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3">
@@ -68,8 +71,8 @@ export function DocumentList({ documents, onRemove, isLoading }: DocumentListPro
           <InboxIcon className="h-6 w-6 text-zinc-400" />
         </div>
         <div className="flex flex-col gap-1 max-w-xs">
-          <p className="text-sm font-semibold text-zinc-200">Aún no hay documentos</p>
-          <p className="text-xs text-zinc-500">Sube un archivo PDF o pega texto plano para comenzar a chatear.</p>
+          <p className="text-sm font-semibold text-zinc-200">{t("doclist.noDocsTitle")}</p>
+          <p className="text-xs text-zinc-500">{t("doclist.noDocsDesc")}</p>
         </div>
       </div>
     );
@@ -101,7 +104,7 @@ export function DocumentList({ documents, onRemove, isLoading }: DocumentListPro
                 {doc.name}
               </p>
               <p className="text-xs text-zinc-500 font-medium">
-                {formatDate(doc.uploadedAt)}
+                {formatDate(doc.uploadedAt, locale)}
               </p>
             </div>
 

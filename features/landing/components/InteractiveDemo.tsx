@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, type Variants } from "motion/react";
 import { FileText, Sparkles, Send } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/I18nContext";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -10,10 +11,11 @@ const fadeUp: Variants = {
 };
 
 export function InteractiveDemo() {
+  const { t, locale } = useTranslation();
   const [typedQuestion, setTypedQuestion] = useState("");
   const [demoState, setDemoState] = useState<"typing" | "searching" | "highlighting" | "answering" | "idle">("typing");
 
-  const questionText = "¿Cuál es el plazo para entregar los informes?";
+  const questionText = t("demo.question");
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -65,7 +67,7 @@ export function InteractiveDemo() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [demoState]);
+  }, [demoState, questionText]);
 
   return (
     <motion.div
@@ -81,7 +83,7 @@ export function InteractiveDemo() {
         </div>
         <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
           <FileText className="h-3.5 w-3.5 text-violet-400" />
-          contrato_servicios_final.pdf
+          {locale === "es" ? "contrato_servicios_final.pdf" : "service_contract_final.pdf"}
         </div>
         <div className="w-12" />
       </div>
@@ -101,31 +103,30 @@ export function InteractiveDemo() {
           )}
 
           <div className="space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-600">Documento cargado</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-600">{t("demo.docLoaded")}</h4>
             <div className="space-y-3 text-xs text-zinc-400 leading-relaxed font-mono">
-              <p className="opacity-60">... 2. Objeto del Contrato. El Proveedor ejecutará el desarrollo del software según especificaciones técnicas.</p>
-              <p className="opacity-60">3. Precio y Facturación. El monto total acordado será pagado en tres hitos de entrega correspondientes.</p>
+              <p className="opacity-60">{t("demo.clauseSnippet1")}</p>
+              <p className="opacity-60">{t("demo.clauseSnippet2")}</p>
 
               {/* Highlightable Paragraph */}
               <div
-                className={`p-2.5 rounded-lg border transition-all duration-500 ${
-                  demoState === "highlighting" || demoState === "answering"
-                    ? "bg-violet-600/10 border-violet-500/40 text-zinc-100 shadow-[0_0_15px_rgba(124,58,237,0.1)]"
-                    : "border-transparent text-zinc-400"
-                }`}
+                className={`p-2.5 rounded-lg border transition-all duration-500 ${demoState === "highlighting" || demoState === "answering"
+                  ? "bg-violet-600/10 border-violet-500/40 text-zinc-100 shadow-[0_0_15px_rgba(124,58,237,0.1)]"
+                  : "border-transparent text-zinc-400"
+                  }`}
               >
-                <span className="font-bold text-violet-400 mr-1.5">[CLÁUSULA 4]</span>
-                <strong>Plazos de Entrega:</strong> El Proveedor se compromete a entregar los informes finales en un plazo máximo de <strong>10 días hábiles</strong> tras la finalización de cada fase de auditoría.
+                <span className="font-bold text-violet-400 mr-1.5">{t("demo.clauseTitle")}</span>
+                <strong>{t("demo.clauseLabel")}</strong> {t("demo.clauseText")}
               </div>
 
-              <p className="opacity-60">5. Propiedad Intelectual. Toda la propiedad intelectual desarrollada durante el proyecto pertenecerá al Cliente...</p>
+              <p className="opacity-60">{t("demo.clauseSnippet3")}</p>
             </div>
           </div>
 
           {/* Footer info */}
           <div className="mt-4 pt-4 border-t border-zinc-900/60 flex justify-between items-center text-[10px] text-zinc-600">
-            <span>Página 4 de 12</span>
-            <span>2.4 KB procesados</span>
+            <span>{t("demo.pageIndicator")}</span>
+            <span>{t("demo.bytesProcessed")}</span>
           </div>
         </div>
 
@@ -134,7 +135,7 @@ export function InteractiveDemo() {
           <div className="space-y-4 flex-1">
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-600 flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-violet-400" />
-              Asistente de respuestas
+              {t("demo.assistant")}
             </h4>
 
             <div className="space-y-3">
@@ -172,10 +173,10 @@ export function InteractiveDemo() {
                   </div>
                   <div className="rounded-2xl rounded-tl-sm bg-zinc-900 border border-zinc-800 px-3.5 py-2 text-xs text-zinc-300 leading-relaxed space-y-1">
                     <p>
-                      El proveedor tiene un plazo máximo de <strong className="text-violet-400">10 días hábiles</strong> para entregar los informes finales.
+                      {t("demo.answer")}
                     </p>
                     <div className="inline-flex items-center gap-1 bg-violet-500/10 text-violet-400 rounded px-1.5 py-0.5 text-[9px] font-mono mt-1">
-                      Fuente: Cláusula 4
+                      {t("demo.source")}
                     </div>
                   </div>
                 </motion.div>
@@ -186,7 +187,7 @@ export function InteractiveDemo() {
           {/* Simulated Input Area */}
           <div className="border-t border-zinc-900/60 pt-3 flex items-center gap-2">
             <div className="flex-1 bg-zinc-900/50 rounded-xl px-3 py-2 border border-zinc-800/60 text-[11px] text-zinc-600 flex items-center justify-between">
-              <span>Haz una pregunta...</span>
+              <span>{t("demo.placeholder")}</span>
               <Send className="h-3 w-3 text-zinc-700" />
             </div>
           </div>
