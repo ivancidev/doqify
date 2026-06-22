@@ -173,7 +173,7 @@ export default function HomePage() {
           {/* CTAs */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 pt-2 w-full max-w-sm px-4 sm:px-0"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 pt-2 w-full max-w-sm sm:max-w-none px-4 sm:px-0"
           >
             {loading ? (
               <Spinner size="sm" color="accent" />
