@@ -64,12 +64,12 @@ export function TextInput({ onSubmit, isUploading }: TextInputProps) {
         onPress={handleSubmit}
         isDisabled={!canSubmit}
         isPending={isUploading}
-        className="flex items-center gap-2 self-end rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:from-violet-500 hover:to-indigo-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+        className="flex items-center justify-center gap-2 w-full sm:w-auto self-stretch sm:self-end rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:from-violet-500 hover:to-indigo-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
       >
         {({ isPending }) => (
           <>
             {isPending ? (
-              <Spinner size="sm" color="current" />
+              <Spinner size="sm" color="current" className="text-white" />
             ) : (
               <FileSignature className="h-4 w-4" />
             )}

@@ -91,7 +91,7 @@ export function InteractiveDemo() {
       {/* Content Layout */}
       <div className="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-zinc-800/80 min-h-[340px]">
         {/* Left: Document Viewer */}
-        <div className="col-span-1 md:col-span-7 p-6 text-left relative overflow-hidden flex flex-col justify-between">
+        <div className="col-span-1 md:col-span-7 p-4 sm:p-6 text-left relative overflow-hidden flex flex-col justify-between">
           {/* Scanning Line overlay */}
           {demoState === "searching" && (
             <motion.div
@@ -131,7 +131,7 @@ export function InteractiveDemo() {
         </div>
 
         {/* Right: Chat Panel */}
-        <div className="col-span-1 md:col-span-5 p-6 bg-zinc-950/20 text-left flex flex-col justify-between gap-4">
+        <div className="col-span-1 md:col-span-5 p-4 sm:p-6 bg-zinc-950/20 text-left flex flex-col justify-between gap-4">
           <div className="space-y-4 flex-1">
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-600 flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-violet-400" />

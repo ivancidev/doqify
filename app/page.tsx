@@ -128,7 +128,7 @@ export default function HomePage() {
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="relative flex flex-1 flex-col items-center justify-center gap-0 px-6 pt-28 pb-20 text-center md:pt-40 md:pb-28 overflow-hidden"
+        className="relative flex sm:flex-1 flex-col items-center justify-start sm:justify-center gap-0 px-6 pt-12 pb-16 text-center sm:pt-28 sm:pb-20 md:pt-40 md:pb-28 overflow-hidden"
       >
         <DotGrid />
 
@@ -150,7 +150,7 @@ export default function HomePage() {
         >
           {/* Headline */}
           <motion.div variants={fadeUp} className="max-w-4xl space-y-6">
-            <h1 className="text-5xl font-extrabold leading-[1.12] tracking-tight sm:text-7xl">
+            <h1 className="text-4xl font-extrabold leading-[1.12] tracking-tight min-[400px]:text-5xl sm:text-6xl md:text-7xl">
               <span
                 style={{
                   background: "linear-gradient(135deg, #fafafa 0%, #d4d4d8 55%, #a1a1aa 100%)",
@@ -173,7 +173,7 @@ export default function HomePage() {
           {/* CTAs */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-wrap justify-center gap-4 pt-2"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 pt-2 w-full max-w-sm px-4 sm:px-0"
           >
             {loading ? (
               <Spinner size="sm" color="accent" />
@@ -181,14 +181,14 @@ export default function HomePage() {
               <>
                 <Link
                   href="/upload"
-                  className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-violet-600 px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98] w-full sm:w-auto"
                 >
                   <Upload className="h-5 w-5" />
                   {t("home.uploadDoc")}
                 </Link>
                 <Link
                   href="/chat"
-                  className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-8 py-4 text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98] w-full sm:w-auto"
                 >
                   <MessageSquare className="h-5 w-5" />
                   {t("home.goToChat")}
@@ -199,7 +199,7 @@ export default function HomePage() {
               <>
                 <Link
                   href="/auth"
-                  className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-violet-600 px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98] w-full sm:w-auto"
                 >
                   <Zap className="h-5 w-5" />
                   {t("home.startFree")}
@@ -207,7 +207,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/auth"
-                  className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-8 py-4 text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-zinc-600 bg-zinc-800/70 px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-zinc-100 shadow-sm transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-700/80 hover:-translate-y-0.5 active:scale-[0.98] w-full sm:w-auto"
                 >
                   <User className="h-5 w-5" />
                   {t("home.login")}
@@ -296,7 +296,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.12 }}
-                className="flex flex-col items-center gap-3 rounded-2xl border border-zinc-800/60 bg-zinc-900/10 px-8 py-10 text-center backdrop-blur-sm"
+                className="flex flex-col items-center gap-3 rounded-2xl border border-zinc-800/60 bg-zinc-900/10 px-6 py-8 sm:px-8 sm:py-10 text-center backdrop-blur-sm"
               >
                 <span className="text-4xl font-extrabold tracking-tight text-violet-400 sm:text-5xl">
                   {value}
@@ -338,7 +338,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.45, delay: i * 0.15 }}
-                  className="flex flex-1 flex-col items-center gap-4 rounded-2xl border border-zinc-800/70 bg-zinc-900/20 px-8 py-10 text-center backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/30 hover:-translate-y-1"
+                  className="flex flex-1 flex-col items-center gap-4 rounded-2xl border border-zinc-800/70 bg-zinc-900/20 px-6 py-8 sm:px-8 sm:py-10 text-center backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/30 hover:-translate-y-1"
                 >
                   <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-500/30 bg-violet-600/10 text-xl font-black text-violet-400">
                     {num}
@@ -402,7 +402,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group flex gap-6 rounded-2xl border border-zinc-800/70 bg-zinc-900/10 p-8 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/20 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(124,58,237,0.05)]"
+                className="group flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-6 rounded-2xl border border-zinc-800/70 bg-zinc-900/10 p-6 sm:p-8 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:bg-zinc-900/20 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(124,58,237,0.05)]"
               >
                 <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-violet-600/10 border border-violet-500/10 group-hover:bg-violet-600/20 group-hover:border-violet-500/25 group-hover:scale-110 transition-all duration-300">
                   <Icon className="h-6 w-6 text-violet-400" />
@@ -439,7 +439,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative rounded-3xl border border-violet-500/20 bg-zinc-900/20 px-8 py-16 text-center backdrop-blur-md overflow-hidden shadow-2xl shadow-violet-500/5 sm:px-16"
+            className="relative rounded-3xl border border-violet-500/20 bg-zinc-900/20 px-6 py-12 sm:px-16 text-center backdrop-blur-md overflow-hidden shadow-2xl shadow-violet-500/5 sm:py-16"
           >
             {/* Grid overlay */}
             <DotGrid />
@@ -451,13 +451,13 @@ export default function HomePage() {
               <p className="text-base text-zinc-400 sm:text-lg leading-relaxed">
                 {t("home.cta.desc")}
               </p>
-              <div className="flex justify-center pt-4">
+              <div className="flex justify-center pt-4 w-full max-w-xs mx-auto">
                 {loading ? (
                   <Spinner size="sm" color="accent" />
                 ) : user ? (
                   <Link
                     href="/upload"
-                    className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-violet-600 px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98] w-full"
                   >
                     <Upload className="h-5 w-5" />
                     {t("home.uploadDoc")}
@@ -465,7 +465,7 @@ export default function HomePage() {
                 ) : (
                   <Link
                     href="/auth"
-                    className="inline-flex items-center gap-2.5 rounded-xl bg-violet-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98]"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-violet-600 px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:bg-violet-500 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 active:scale-[0.98] w-full"
                   >
                     <Zap className="h-5 w-5" />
                     {t("home.startFree")}
@@ -483,10 +483,10 @@ export default function HomePage() {
       ═══════════════════════════════ */}
       <footer className="border-t border-zinc-900 bg-[#09090b] px-6 py-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <span className="text-xs text-zinc-600 font-medium">
+          <span className="text-xs text-zinc-600 font-medium text-center sm:text-left">
             {t("home.footer.rights", { year: new Date().getFullYear() })}
           </span>
-          <span className="text-xs text-zinc-600 font-medium">
+          <span className="text-xs text-zinc-600 font-medium text-center sm:text-left max-w-xs sm:max-w-none">
             {t("home.footer.secure")}
           </span>
         </div>

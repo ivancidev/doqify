@@ -34,7 +34,7 @@ export function DropZone({ onFileAccepted, isUploading }: DropZoneProps) {
     <div
       {...getRootProps()}
       className={cn(
-        "relative flex flex-col items-center justify-center gap-6 rounded-2xl border border-dashed p-12 text-center transition-all duration-300 cursor-pointer group",
+        "relative flex flex-col items-center justify-center gap-4 sm:gap-6 rounded-2xl border border-dashed p-6 sm:p-12 text-center transition-all duration-300 cursor-pointer group",
         isDragActive && !isDragReject
           ? "border-violet-500 bg-violet-950/20 shadow-[0_0_40px_rgba(124,58,237,0.12)] scale-[1.01]"
           : isDragReject

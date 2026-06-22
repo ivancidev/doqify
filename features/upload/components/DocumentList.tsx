@@ -111,7 +111,7 @@ export function DocumentList({ documents, onRemove, isLoading }: DocumentListPro
             {/* Badge de estado */}
             <span
               className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm border",
+                "flex shrink-0 items-center gap-1 sm:gap-1.5 rounded-full px-2 py-1 sm:px-3 text-xs font-semibold shadow-sm border",
                 status.className
               )}
             >
@@ -120,7 +120,7 @@ export function DocumentList({ documents, onRemove, isLoading }: DocumentListPro
               ) : StatusIcon ? (
                 <StatusIcon className="h-3.5 w-3.5" />
               ) : null}
-              {status.label}
+              <span className="hidden min-[420px]:inline-block">{status.label}</span>
             </span>
 
             {/* Botón eliminar */}

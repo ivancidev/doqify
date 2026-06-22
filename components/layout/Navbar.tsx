@@ -29,14 +29,14 @@ export function Navbar() {
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-600">
             <Zap className="h-4 w-4 text-white" />
           </span>
-          <span className="text-base font-semibold tracking-tight">doqify</span>
+          <span className="text-base font-semibold tracking-tight hidden min-[380px]:inline-block">doqify</span>
         </Link>
 
         {/* Nav links and auth status */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {user && (
             <>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 {navLinks.map(({ href, label, icon: Icon }) => {
                   const isActive = pathname === href || pathname.startsWith(href);
                   return (
@@ -44,14 +44,14 @@ export function Navbar() {
                       key={href}
                       href={href}
                       className={cn(
-                        "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                        "flex items-center gap-1 sm:gap-1.5 rounded-lg px-2 py-1.5 sm:px-3 text-xs sm:text-sm font-medium transition-colors",
                         isActive
                           ? "bg-violet-600/15 text-violet-400"
                           : "text-[#a1a1aa] hover:bg-[#18181b] hover:text-[#fafafa]"
                       )}
                     >
                       <Icon className="h-3.5 w-3.5" />
-                      {label}
+                      <span className="hidden min-[480px]:inline-block">{label}</span>
                     </Link>
                   );
                 })}
@@ -65,7 +65,7 @@ export function Navbar() {
             <button
               onClick={() => setLocale("en")}
               className={cn(
-                "rounded-lg px-2 py-1 text-[10px] sm:text-xs font-bold uppercase transition-all duration-200 cursor-pointer outline-none",
+                "rounded-lg px-1.5 py-1 text-[10px] sm:px-2 sm:text-xs font-bold uppercase transition-all duration-200 cursor-pointer outline-none",
                 locale === "en"
                   ? "bg-violet-600 text-white shadow-md shadow-violet-500/10"
                   : "text-zinc-500 hover:text-zinc-200"
@@ -76,7 +76,7 @@ export function Navbar() {
             <button
               onClick={() => setLocale("es")}
               className={cn(
-                "rounded-lg px-2 py-1 text-[10px] sm:text-xs font-bold uppercase transition-all duration-200 cursor-pointer outline-none",
+                "rounded-lg px-1.5 py-1 text-[10px] sm:px-2 sm:text-xs font-bold uppercase transition-all duration-200 cursor-pointer outline-none",
                 locale === "es"
                   ? "bg-violet-600 text-white shadow-md shadow-violet-500/10"
                   : "text-zinc-500 hover:text-zinc-200"
@@ -108,10 +108,10 @@ export function Navbar() {
           ) : (
             <Link
               href="/auth"
-              className="flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-all hover:bg-zinc-850 hover:text-white"
+              className="flex items-center gap-1 sm:gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-semibold text-zinc-300 transition-all hover:bg-zinc-850 hover:text-white"
             >
               <User className="h-3.5 w-3.5" />
-              {t("nav.signIn")}
+              <span className="hidden min-[380px]:inline-block">{t("nav.signIn")}</span>
             </Link>
           )}
         </div>

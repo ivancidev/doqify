@@ -110,7 +110,7 @@ export default function AuthPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md rounded-3xl border border-zinc-800/80 bg-[#141419]/60 backdrop-blur-xl p-8 shadow-2xl shadow-black/40 relative z-10"
+        className="w-full max-w-md rounded-3xl border border-zinc-800/80 bg-[#141419]/60 backdrop-blur-xl p-6 sm:p-8 shadow-2xl shadow-black/40 relative z-10"
       >
         {/* Header */}
         <div className="mb-8 text-center flex flex-col items-center">

@@ -60,7 +60,7 @@ export default function UploadPage() {
       )}
 
       {/* Upload tabs */}
-      <div className="rounded-3xl border border-zinc-800/80 bg-[#141419]/60 backdrop-blur-xl p-8 shadow-2xl shadow-black/40">
+      <div className="rounded-3xl border border-zinc-800/80 bg-[#141419]/60 backdrop-blur-xl p-5 sm:p-8 shadow-2xl shadow-black/40">
         <UploadTabs
           onFileUpload={handleFileUpload}
           onTextUpload={handleTextUpload}
