@@ -91,7 +91,7 @@ export function Navbar() {
           ) : user ? (
             <div className="flex items-center gap-3">
               <span className="hidden text-xs font-medium text-zinc-400 sm:inline-block max-w-[120px] truncate">
-                {user.email}
+                {user.user_metadata?.full_name || user.email}
               </span>
               <span title={t("nav.signOut")}>
                 <Button

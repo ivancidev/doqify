@@ -68,6 +68,8 @@ export const translations = {
     "auth.createAccountDesc": "Register your credentials to start chatting",
     "auth.accountCreated": "Account created! Check your email to confirm your registration.",
     "auth.unexpectedError": "An unexpected error occurred.",
+    "auth.name": "Full name",
+    "auth.namePlaceholder": "John Doe",
     "auth.email": "Email address",
     "auth.emailPlaceholder": "name@example.com",
     "auth.password": "Password",
@@ -75,6 +77,8 @@ export const translations = {
     "auth.signUp": "Sign up",
     "auth.noAccount": "Don't have an account? Sign up",
     "auth.hasAccount": "Already have an account? Sign in",
+    "auth.or": "or",
+    "auth.googleSignIn": "Continue with Google",
 
     // Upload Page
     "upload.title": "Upload documents",
@@ -199,6 +203,8 @@ export const translations = {
     "auth.createAccountDesc": "Registra tus credenciales para comenzar a chatear",
     "auth.accountCreated": "¡Cuenta creada! Revisa tu correo electrónico para confirmar tu registro.",
     "auth.unexpectedError": "Ocurrió un error inesperado.",
+    "auth.name": "Nombre completo",
+    "auth.namePlaceholder": "Juan Pérez",
     "auth.email": "Correo electrónico",
     "auth.emailPlaceholder": "nombre@ejemplo.com",
     "auth.password": "Contraseña",
@@ -206,6 +212,8 @@ export const translations = {
     "auth.signUp": "Registrarse",
     "auth.noAccount": "¿No tienes una cuenta? Regístrate",
     "auth.hasAccount": "¿Ya tienes una cuenta? Inicia sesión",
+    "auth.or": "o",
+    "auth.googleSignIn": "Continuar con Google",
 
     // Upload Page
     "upload.title": "Subir documentos",

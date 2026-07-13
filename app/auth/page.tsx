@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Spinner } from "@heroui/react";
-import { Mail, Lock, LogIn, UserPlus, AlertCircle, Zap, Sparkles } from "lucide-react";
+import { Mail, Lock, LogIn, UserPlus, AlertCircle, Zap, Sparkles, User } from "lucide-react";
 import { motion } from "motion/react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useAuth } from "@/components/providers/AuthContext";
@@ -17,6 +17,7 @@ export default function AuthPage() {
   const { t } = useTranslation();
   
   const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,9 +40,28 @@ export default function AuthPage() {
     }
   }, [user, authLoading, router]);
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+    try {
+      const { error: oauthErr } = await supabaseBrowser.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (oauthErr) throw oauthErr;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      setError(errorMsg || t("auth.unexpectedError"));
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    if (!email.trim() || !password.trim() || (!isLogin && !name.trim())) return;
 
     setLoading(true);
     setError(null);
@@ -62,6 +82,9 @@ export default function AuthPage() {
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/auth/callback`,
+            data: {
+              full_name: name.trim(),
+            },
           },
         });
         if (signUpErr) throw signUpErr;
@@ -156,8 +179,51 @@ export default function AuthPage() {
           </div>
         )}
 
+        {/* Google OAuth Button */}
+        <div className="mb-4">
+          <Button
+            type="button"
+            onPress={handleGoogleSignIn}
+            isDisabled={loading}
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-[#0d0d11]/80 hover:bg-[#141419] px-6 py-2.5 text-sm font-semibold text-zinc-200 transition-all duration-200 hover:border-zinc-700 active:scale-[0.98] cursor-pointer"
+          >
+            <svg className="h-4 w-4 shrink-0" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+              <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+            </svg>
+            <span>{t("auth.googleSignIn")}</span>
+          </Button>
+        </div>
+
+        {/* Separator */}
+        <div className="flex items-center my-5">
+          <div className="flex-1 h-px bg-zinc-800/80" />
+          <span className="px-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">
+            {t("auth.or")}
+          </span>
+          <div className="flex-1 h-px bg-zinc-800/80" />
+        </div>
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {!isLogin && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                {t("auth.name")}
+              </label>
+              <div className="relative flex items-center">
+                <User className="absolute left-3.5 h-4 w-4 text-zinc-500" />
+                <input
+                  type="text"
+                  placeholder={t("auth.namePlaceholder")}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={loading}
+                  className="w-full rounded-xl border border-zinc-800 bg-[#0d0d11] pl-10 pr-4 py-2.5 text-sm text-zinc-200 placeholder:text-zinc-500 focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/20 outline-none disabled:opacity-50 transition-all duration-200"
+                />
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
               {t("auth.email")}
@@ -194,7 +260,7 @@ export default function AuthPage() {
 
           <Button
             type="submit"
-            isDisabled={loading || !email.trim() || !password.trim()}
+            isDisabled={loading || !email.trim() || !password.trim() || (!isLogin && !name.trim())}
             isPending={loading}
             className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
           >
